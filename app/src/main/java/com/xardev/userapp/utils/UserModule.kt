@@ -26,7 +26,8 @@ class UserModule {
             context,
             UserDatabase::class.java,
             "user.db"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
 
         return db.userDao()
     }

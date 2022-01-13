@@ -50,7 +50,7 @@ class RegisterInfoFragment : Fragment() {
             val bundle = bundleOf("user" to user)
 
             findNavController().navigate(
-                R.id.registerSuccessFragment,
+                R.id.registerResultFragment,
                 bundle
             )
 

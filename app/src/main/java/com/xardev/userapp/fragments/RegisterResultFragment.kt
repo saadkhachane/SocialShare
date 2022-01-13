@@ -4,42 +4,41 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.util.Log
-import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
-import android.view.animation.BounceInterpolator
-import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.xardev.userapp.R
 import com.xardev.userapp.data.User
-import com.xardev.userapp.databinding.FragmentRegisterInfoBinding
-import com.xardev.userapp.databinding.FragmentRegisterMainBinding
-import com.xardev.userapp.databinding.FragmentRegisterSuccessBinding
+import com.xardev.userapp.databinding.FragmentRegisterResultBinding
 import com.xardev.userapp.utils.DataStoreManager
+import com.xardev.userapp.utils.Result
+import com.xardev.userapp.utils.exceptionOrNull
+import com.xardev.userapp.viewmodels.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "here"
 
 @AndroidEntryPoint
-class RegisterSuccessFragment : Fragment() {
+class RegisterResultFragment : Fragment() {
 
     var user : User? = null
 
-//    @Inject
-//    lateinit var viewModel: MainViewModel
+    @Inject
+    lateinit var viewModel: RegisterViewModel
 
-    val dsManager: DataStoreManager = DataStoreManager(requireContext())
+    lateinit var dsManager: DataStoreManager
 
-    lateinit var binder: FragmentRegisterSuccessBinding
+    lateinit var binder: FragmentRegisterResultBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,39 +51,75 @@ class RegisterSuccessFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binder = DataBindingUtil.inflate(inflater,R.layout.fragment_register_success, container, false)
+        binder = DataBindingUtil.inflate(inflater,R.layout.fragment_register_result, container, false)
+        dsManager = DataStoreManager(context)
 
         if (user != null){
-
             binder.name.text = "${user!!.name}!"
+
+            setCollectors()
+            viewModel.addUser(user!!)
 
         }else {
             findNavController().navigateUp()
         }
 
-        setLoading()
-
 
         return binder.root
     }
 
-    private fun setLoading() {
-        var progress = 0
+    private fun setCollectors() {
+        lifecycleScope.launchWhenStarted {
 
-        lifecycleScope.launchWhenCreated {
-            for(i in 0..99){
-                delay(30)
-                progress++
-                binder.progressBar.progress = progress
-                Log.d(TAG, "loading: $progress ")
+            launch {
+                viewModel.isLoading
+                    .collect{
+                        if (it) binder.progressBar.show()
+                        else binder.progressBar.hide()
+                    }
             }
 
-            Log.d(TAG, "setLoading: start")
-            binder.progressBar.hide()
+            launch {
+                viewModel.result
+                    .collect {
+                        if (it is Result.Success<*>){
+                            if (it != null){
+                                dsManager.setSessionActive(true)
+                                dsManager.setFirstLaunch(false)
+                                user?.email?.let { it1 -> dsManager.setEmail(it1) }
 
-            animatePopView(binder.trophy)
+                                Log.d(TAG, "Success: ${it.value} ")
+                                binder.resultAnim.setAnimation(R.raw.success)
+                                binder.resultAnim.playAnimation()
+                                setLoading()
+                            }
+                        }else if (it is Result.Failure<*>){
+                            Log.d(TAG, "Failure: ${it.error.message} ")
+
+                            binder.congratulation.text = "Oups.."
+                            binder.title.text = "Something happened."
+                            binder.subtitle.text = it.error.message
+
+                            binder.resultAnim.setAnimation(R.raw.failure)
+                            binder.resultAnim.playAnimation()
+                            setLoading()
+                        }
+
+                    }
+            }
+
+
+        }
+
+    }
+
+    private fun setLoading() {
+
+        lifecycleScope.launchWhenCreated {
+
+            animatePopView(binder.resultAnim)
             delay(1000)
-            animateTrophy(binder.trophy)
+            animateTrophy(binder.resultAnim)
             delay(1000)
             animateView(binder.congratulation)
             animateView(binder.name)

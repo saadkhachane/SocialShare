@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.RegisterSuccessFragment"
+        tools:context=".fragments.RegisterResultFragment"
         android:background="@drawable/success_back">
 
 
@@ -48,20 +48,20 @@
             android:id="@+id/subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="85dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="85dp"
+            android:alpha="0"
             android:fontFamily="@font/montserrat"
             android:text="Now you are able to share \nyour profile with friends \nand family."
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="16sp"
-            android:alpha="0"
-            tools:alpha="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:alpha="1" />
 
         <TextView
             android:id="@+id/title"
@@ -136,6 +136,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.521" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/result_anim"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:translationY="240dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/congratulation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

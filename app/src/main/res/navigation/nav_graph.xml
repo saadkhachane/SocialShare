@@ -45,12 +45,12 @@
         android:label="RegisterInfoFragment"
         tools:layout="@layout/fragment_register_info" >
         <action
-            android:id="@+id/action_registerInfoFragment_to_registerSuccessFragment"
-            app:destination="@id/registerSuccessFragment" />
+            android:id="@+id/action_registerInfoFragment_to_registerResultFragment"
+            app:destination="@id/registerResultFragment" />
     </fragment>
     <fragment
-        android:id="@+id/registerSuccessFragment"
-        android:name="com.xardev.userapp.fragments.RegisterSuccessFragment"
-        android:label="RegisterSuccessFragment"
-        tools:layout="@layout/fragment_register_success"/>
+        android:id="@+id/registerResultFragment"
+        android:name="com.xardev.userapp.fragments.RegisterResultFragment"
+        android:label="RegisterResultFragment"
+        tools:layout="@layout/fragment_register_result"/>
 </navigation>
