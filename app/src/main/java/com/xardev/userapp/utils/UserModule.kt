@@ -2,8 +2,7 @@ package com.xardev.userapp.utils
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.xardev.userapp.data.UserDatabase
+import com.xardev.userapp.data.local.UserDatabase
 import com.xardev.userapp.data.api.QrApiService
 import com.xardev.userapp.data.local.UserDao
 import dagger.Module

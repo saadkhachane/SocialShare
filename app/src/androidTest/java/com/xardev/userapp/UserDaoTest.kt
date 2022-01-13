@@ -4,20 +4,16 @@ import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.xardev.userapp.data.User
-import com.xardev.userapp.data.UserDatabase
+import com.xardev.userapp.data.local.UserDatabase
 import com.xardev.userapp.data.local.UserDao
-import com.xardev.userapp.utils.Result
 import com.xardev.userapp.utils.Result.Success
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.junit.Assert.*;
-import java.lang.Exception
-import kotlin.jvm.Throws
 
 private const val TAG = "here"
 
@@ -61,8 +57,8 @@ class UserDaoTest {
 
         GlobalScope.launch(Dispatchers.Main) {
 
-            dao.addUser(User(id= null, name= "Saad", email="saad@gmail.com"))
-            dao.addUser(User(id= null, name= "Karim", email="karim@gmail.com"))
+            dao.addUser(User(id = null, name = "Saad", email ="saad@gmail.com"))
+            dao.addUser(User(id = null, name = "Karim", email ="karim@gmail.com"))
 
             dao.getUsers()
                 .collect {
@@ -107,8 +103,8 @@ class UserDaoTest {
 
         GlobalScope.launch(Dispatchers.Main) {
 
-            dao.addUser(User(null, name= "Saad", email="saad@gmail.com"))
-            dao.addUser(User(null, name= "Karim", email="karim@gmail.com"))
+            dao.addUser(User(null, name = "Saad", email ="saad@gmail.com"))
+            dao.addUser(User(null, name = "Karim", email ="karim@gmail.com"))
 
             dao.getUserById(2)
                 .collect {
@@ -138,8 +134,8 @@ class UserDaoTest {
 
         GlobalScope.launch(Dispatchers.Main) {
 
-            dao.addUser(User(null, name= "Saad", email="saad@gmail.com"))
-            dao.addUser(User(null, name= "Karim", email="karim@gmail.com"))
+            dao.addUser(User(null, name = "Saad", email ="saad@gmail.com"))
+            dao.addUser(User(null, name = "Karim", email ="karim@gmail.com"))
 
             launch {
                 dao.getUserByEmail("saad@gmail.com")
@@ -154,13 +150,13 @@ class UserDaoTest {
 
     @DelicateCoroutinesApi
     @Test
-    fun userExists_with_NewUser_Returns_0(){
+    fun userExists_with_EmptyDB_Returns_0(){
 
         GlobalScope.launch(Dispatchers.Main) {
 
             val it = dao.userExists("saad@gmail.com")
 
-            Log.d(TAG, "userExists_with_NewUser_Returns_0: $it")
+            Log.d(TAG, "userExists_with_EmptyDB_Returns_0: $it")
             assertEquals(it, 0)
         }
     }
@@ -171,13 +167,12 @@ class UserDaoTest {
 
         GlobalScope.launch(Dispatchers.Main) {
 
-            dao.addUser(User(1, name= "Saad", email="saad@gmail.com"))
+            dao.addUser(User(1, name = "Saad", email ="saad@gmail.com"))
 
             val it = dao.userExists("saad@gmail.com")
 
             Log.d(TAG, "userExists_with_ExistingUser_Returns_1: $it")
             assertEquals(it, 1)
-
 
         }
     }
@@ -187,8 +182,8 @@ class UserDaoTest {
     fun addUser_with_ExistingUser_Throws_Exception(){
 
         GlobalScope.launch(Dispatchers.Main) {
-            val user = User(1, name= "Saad", email="saad@gmail.com")
-            val user2 = User(1, name= "Karim", email="Karim@gmail.com")
+            val user = User(1, name = "Saad", email ="saad@gmail.com")
+            val user2 = User(1, name = "Karim", email ="Karim@gmail.com")
             dao.addUser(user)
 
             kotlin.runCatching {
@@ -207,7 +202,7 @@ class UserDaoTest {
     fun addUser_with_NewUser_Returns_Success(){
 
         GlobalScope.launch(Dispatchers.Main) {
-            val user = User(1, name= "Saad", email="saad@gmail.com")
+            val user = User(1, name = "Saad", email ="saad@gmail.com")
 
             kotlin.runCatching {
                 dao.addUser(user)
@@ -220,10 +215,10 @@ class UserDaoTest {
 
     @DelicateCoroutinesApi
     @Test
-    fun updateUser_with_NewUser_Throws_Exception(){
+    fun updateUser_with_EmptyDB_Throws_Exception(){
 
         GlobalScope.launch(Dispatchers.Main) {
-            val user = User(1, name= "Saad", email="saad@gmail.com")
+            val user = User(1, name = "Saad", email ="saad@gmail.com")
 
             kotlin.runCatching {
                 if (dao.userExists(user.email) == 0){
@@ -231,7 +226,7 @@ class UserDaoTest {
                 }
 
             }.onFailure {
-                Log.d(TAG, "updateUser_with_NewUser_Throws_Exception: ${it.message}")
+                Log.d(TAG, "updateUser_with_EmptyDB_Throws_Exception: ${it.message}")
                 assertThrows(Throwable::class.java) {
                     throw it
                 }
@@ -244,7 +239,7 @@ class UserDaoTest {
     fun updateUser_with_ExistingUser_Returns_Success(){
 
         GlobalScope.launch(Dispatchers.Main) {
-            val user = User(1, name= "Saad", email="saad@gmail.com")
+            val user = User(1, name = "Saad", email ="saad@gmail.com")
             dao.addUser(user)
 
             kotlin.runCatching {
@@ -270,7 +265,7 @@ class UserDaoTest {
     fun deleteUser_with_NewUser_Throws_Exception(){
 
         GlobalScope.launch(Dispatchers.Main) {
-            val user = User(1, name= "Saad", email="saad@gmail.com")
+            val user = User(1, name = "Saad", email ="saad@gmail.com")
 
             if (dao.userExists(user.email) == 0){
                 assertThrows(Throwable::class.java) {
@@ -285,7 +280,7 @@ class UserDaoTest {
     fun deleteUser_with_ExistingUser_Returns_Success(){
 
         GlobalScope.launch(Dispatchers.Main) {
-            val user = User(1, name= "Saad", email="saad@gmail.com")
+            val user = User(1, name = "Saad", email ="saad@gmail.com")
             dao.addUser(user)
 
             if (dao.userExists(user.email) == 1){

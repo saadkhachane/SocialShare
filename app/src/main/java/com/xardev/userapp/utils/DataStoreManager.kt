@@ -23,7 +23,7 @@ class DataStoreManager(val context: Context) {
     fun isSessionActive() : Flow<Boolean?>{
         return context.datastore.data
             .map {
-                if (it[SESSION_KEY] != null) it[SESSION_KEY] else false
+               it[SESSION_KEY]
             }.flowOn(Dispatchers.IO)
     }
 
@@ -37,8 +37,8 @@ class DataStoreManager(val context: Context) {
     fun isRememberEnabled() : Flow<Boolean?>{
          return context.datastore.data
              .map {
-                 if (it[REMEMBER_KEY] != null) it[REMEMBER_KEY] else true
-             }.flowOn(Dispatchers.IO)
+                 it[REMEMBER_KEY]
+             }
     }
 
     suspend fun setRememberEnabled(b: Boolean){
@@ -51,8 +51,8 @@ class DataStoreManager(val context: Context) {
     fun getEmail() : Flow<String?>{
         return context.datastore.data
             .map {
-                if (it[EMAIL_KEY] != null) it[EMAIL_KEY] else ""
-            }.flowOn(Dispatchers.IO)
+                it[EMAIL_KEY]
+            }
     }
 
     suspend fun setEmail(email: String){

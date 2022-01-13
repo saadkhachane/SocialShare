@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <activity
+        android:id="@+id/registerActivity"
+        android:name="com.xardev.userapp.RegisterActivity"
+        android:label="RegisterActivity"
+        tools:layout="@layout/activity_register"/>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.xardev.userapp.fragments.WelcomeFragment"
+        android:label="fragment_welcome"
+        tools:layout="@layout/fragment_welcome" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_registerMainFragment"
+            app:destination="@id/registerMainFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerMainFragment"
+        android:name="com.xardev.userapp.fragments.RegisterMainFragment"
+        android:label="RegisterMainFragment"
+        tools:layout="@layout/fragment_register_main" >
+        <action
+            android:id="@+id/action_registerMainFragment_to_registerPhotoFragment"
+            app:destination="@id/registerPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerPhotoFragment"
+        android:name="com.xardev.userapp.fragments.RegisterPhotoFragment"
+        android:label="RegisterPhotoFragment"
+        tools:layout="@layout/fragment_register_main" >
+        <action
+            android:id="@+id/action_registerPhotoFragment_to_registerInfoFragment"
+            app:destination="@id/registerInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerInfoFragment"
+        android:name="com.xardev.userapp.fragments.RegisterInfoFragment"
+        android:label="RegisterInfoFragment"
+        tools:layout="@layout/fragment_register_info" >
+        <action
+            android:id="@+id/action_registerInfoFragment_to_registerSuccessFragment"
+            app:destination="@id/registerSuccessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerSuccessFragment"
+        android:name="com.xardev.userapp.fragments.RegisterSuccessFragment"
+        android:label="RegisterSuccessFragment"
+        tools:layout="@layout/fragment_register_success"/>
+</navigation>
