@@ -7,19 +7,227 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:context=".MainActivity">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/head_back"
+                android:layout_width="wrap_content"
+                android:layout_height="315dp"
+                android:scaleType="fitStart"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_main_head_back" />
+
+            <Button
+                style="icon_Outline_Button"
+                android:id="@+id/menu"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:alpha="0"
+                tools:alpha="1"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:padding="0dp"
+                app:icon="@drawable/ic_menu"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/head_back" />
+
+            <TextView
+                android:id="@+id/welcome_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat"
+                android:text="Good morning,"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintBottom_toBottomOf="@+id/head_back"
+                app:layout_constraintStart_toEndOf="@+id/menu"
+                app:layout_constraintTop_toTopOf="@+id/head_back"
+                app:layout_constraintVertical_bias="0.41000003" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Saad"
+                android:textColor="@color/white"
+                android:textSize="34sp"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintStart_toStartOf="@+id/welcome_msg"
+                app:layout_constraintTop_toBottomOf="@+id/welcome_msg" />
+
+
+            <View
+                android:id="@+id/image_layout"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="24dp"
+                android:alpha="0"
+                tools:alpha="1"
+                android:background="@drawable/profile_img_back"
+                app:layout_constraintBottom_toBottomOf="@+id/head_back"
+                app:layout_constraintEnd_toEndOf="@+id/head_back"
+                app:layout_constraintTop_toTopOf="@+id/head_back"
+                 />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image"
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:src="@drawable/img_profile"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintBottom_toBottomOf="@+id/image_layout"
+                app:layout_constraintEnd_toEndOf="@+id/image_layout"
+                app:layout_constraintStart_toStartOf="@+id/image_layout"
+                app:layout_constraintTop_toTopOf="@+id/image_layout"
+                 />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/qr_shadow"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="15dp"
+                android:alpha="0"
+                tools:alpha="0.3"
+                app:layout_constraintBottom_toBottomOf="@+id/qr_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/qr_layout" />
+
+            <LinearLayout
+                android:id="@+id/qr_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:elevation="20dp"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintEnd_toEndOf="@+id/qr_shadow"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/qr_shadow"
+                app:layout_constraintTop_toBottomOf="@+id/image_layout">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="0dp"
+                    app:contentPadding="24dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/qr_layout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/qr_layout">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/qr"
+                            android:layout_width="105dp"
+                            android:layout_height="105dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:src="@drawable/qr"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/preview"
+                            style="@style/iconButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:paddingHorizontal="25dp"
+                            app:icon="@drawable/ic_eye"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/share"
+                            app:layout_constraintStart_toEndOf="@+id/qr" />
+
+
+                        <Button
+                            android:id="@+id/share"
+                            style="@style/iconButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:paddingHorizontal="25dp"
+                            app:icon="@drawable/ic_share"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintStart_toEndOf="@+id/preview" />
+
+                        <Switch
+                            android:id="@+id/switch_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/list_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Qr data"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintStart_toStartOf="@+id/qr_shadow"
+                app:layout_constraintTop_toBottomOf="@+id/qr_shadow" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:alpha="0"
+                tools:alpha="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/qr_shadow"
+                app:layout_constraintStart_toStartOf="@+id/qr_shadow"
+                app:layout_constraintTop_toBottomOf="@+id/list_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 </layout>

@@ -2,6 +2,7 @@ package com.xardev.userapp.fragments
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.xardev.userapp.MainActivity
 import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.FragmentRegisterResultBinding
@@ -52,7 +54,7 @@ class RegisterResultFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binder = DataBindingUtil.inflate(inflater,R.layout.fragment_register_result, container, false)
-        dsManager = DataStoreManager(context)
+        dsManager = DataStoreManager(requireContext())
 
         if (user != null){
             binder.name.text = "${user!!.name}!"
@@ -87,17 +89,21 @@ class RegisterResultFragment : Fragment() {
                                 dsManager.setSessionActive(true)
                                 dsManager.setFirstLaunch(false)
                                 user?.email?.let { it1 -> dsManager.setEmail(it1) }
+                                dsManager.setSessionActive(true)
 
                                 Log.d(TAG, "Success: ${it.value} ")
                                 binder.resultAnim.setAnimation(R.raw.success)
                                 binder.resultAnim.playAnimation()
                                 setLoading()
+                                delay(3500)
+                                startActivity(Intent(activity, MainActivity::class.java))
+                                activity?.finish()
                             }
                         }else if (it is Result.Failure<*>){
                             Log.d(TAG, "Failure: ${it.error.message} ")
 
                             binder.congratulation.text = "Oups.."
-                            binder.title.text = "Something happened."
+                            binder.title.text = "What Happened?"
                             binder.subtitle.text = it.error.message
 
                             binder.resultAnim.setAnimation(R.raw.failure)

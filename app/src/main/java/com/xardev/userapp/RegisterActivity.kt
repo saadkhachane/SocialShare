@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.xardev.userapp.databinding.ActivityRegisterBinding
-import com.xardev.userapp.databinding.ActivityWelcomeBinding
 import com.xardev.userapp.utils.DataStoreManager
 import com.xardev.userapp.viewmodels.WelcomeViewModel
 import dagger.hilt.android.AndroidEntryPoint

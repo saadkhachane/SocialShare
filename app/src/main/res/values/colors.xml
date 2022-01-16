@@ -8,5 +8,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#E1E1E1</color>
     <color name="form">#F9F9F9</color>
+    <color name="icon_button">#F9F9F9</color>
+    <color name="ripple">#EEEEEE</color>
     <color name="text_field">#EFEFEF</color>
 </resources>
