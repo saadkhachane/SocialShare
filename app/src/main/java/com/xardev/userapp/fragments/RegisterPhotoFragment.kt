@@ -1,17 +1,26 @@
 package com.xardev.userapp.fragments
 
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media.getBitmap
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.core.content.ContextCompat
+import androidx.core.net.toFile
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
@@ -21,6 +30,11 @@ import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.FragmentRegisterMainBinding
 import com.xardev.userapp.databinding.FragmentRegisterPhotoBinding
 import com.xardev.userapp.databinding.FragmentWelcomeBinding
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.jar.Manifest
 
 private const val TAG = "here"
@@ -192,10 +206,83 @@ class RegisterPhotoFragment : Fragment() {
 
     private fun showGallery() {
         Log.d(TAG, "showGallery()")
+
+        getContent.launch("image/*")
     }
 
     private fun showCamera() {
         Log.d(TAG, "showCamera()")
 
+        val takeImage = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(takeImage, 1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when(requestCode){
+
+            1 -> {
+                if (resultCode == RESULT_OK){
+                    if (data != null){
+
+                        try {
+
+                            val bitmap = data.extras?.get("data") as Bitmap
+
+                            val file = createImageFile()
+                            saveImageFile(file, bitmap)
+
+                            user?.img_url = file.absolutePath
+                            binder.image.setImageURI(Uri.parse(user?.img_url))
+                            binder.imageLayout.visibility = View.GONE
+                        } catch (ex: IOException) {
+                            // Error occurred while creating the File
+                            Log.d(TAG, "onActivityResult: ${ex.message}")
+                        }
+
+                    }
+
+
+                }else {
+                    Log.d(TAG, "image: ${data?.data}")
+                }
+            }
+
+        }
+    }
+
+    val getContent = registerForActivityResult(GetContent()) { uri: Uri? ->
+        Log.d(TAG, "getContent image: ${uri}")
+
+        val bitmap: Bitmap = getBitmap(context?.contentResolver, uri)
+
+        val file = createImageFile()
+        saveImageFile(file, bitmap)
+
+        user?.img_url = file.absolutePath
+        binder.image.setImageURI(Uri.parse(user?.img_url))
+        binder.imageLayout.visibility = View.GONE
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        )
+    }
+
+    @Throws(IOException::class)
+    private fun saveImageFile(file: File, bitmap: Bitmap){
+        val stream = FileOutputStream(file)
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+        stream.flush()
+        stream.close()
     }
 }

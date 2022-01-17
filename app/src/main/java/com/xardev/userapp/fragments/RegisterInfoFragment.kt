@@ -1,5 +1,6 @@
 package com.xardev.userapp.fragments
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.FragmentRegisterInfoBinding
 import com.xardev.userapp.databinding.FragmentRegisterMainBinding
+import java.net.URI
 
 class RegisterInfoFragment : Fragment() {
 
@@ -35,6 +37,8 @@ class RegisterInfoFragment : Fragment() {
         if (user != null){
 
             binder.name.text = "${user!!.name}!"
+            binder.image.setImageURI( Uri.parse(user!!.img_url) )
+            binder.imageView.visibility = View.INVISIBLE
 
         }else {
             findNavController().navigateUp()

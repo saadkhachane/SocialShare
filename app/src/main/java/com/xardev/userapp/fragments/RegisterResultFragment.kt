@@ -3,6 +3,7 @@ package com.xardev.userapp.fragments
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -58,6 +59,7 @@ class RegisterResultFragment : Fragment() {
 
         if (user != null){
             binder.name.text = "${user!!.name}!"
+            binder.image.setImageURI( Uri.parse(user!!.img_url) )
 
             setCollectors()
             viewModel.addUser(user!!)

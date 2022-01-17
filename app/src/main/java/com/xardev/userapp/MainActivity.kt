@@ -3,6 +3,7 @@ package com.xardev.userapp
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Intent
+import android.net.Uri
 import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,12 +25,15 @@ import com.xardev.userapp.databinding.ActivityMainBinding
 import com.xardev.userapp.utils.DataStoreManager
 import com.xardev.userapp.viewmodels.MainViewModel
 import com.xardev.userapp.viewmodels.WelcomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "here"
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     @Inject
@@ -52,16 +56,39 @@ class MainActivity : AppCompatActivity() {
         binder.lifecycleOwner = this
 
         setupRecycler()
+        setCollectors()
         animateViews(binder)
+    }
+
+    private fun setCollectors() {
+        lifecycleScope.launchWhenCreated {
+
+            launch {
+                dsManager.getEmail().collect {
+                    if (it != null)
+                        viewModel.getUser(it)
+                }
+            }
+
+            launch {
+
+                viewModel.user
+                    .collect {
+                        if (it != null){
+                            binder.name.text = it.name
+                            binder.image.setImageURI(Uri.parse(it.img_url))
+                        }
+                    }
+
+            }
+
+        }
+
     }
 
     private fun setupRecycler() {
         binder.recyclerView.layoutManager = LinearLayoutManager(this)
         binder.recyclerView.adapter = adapter
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun onResume() {
