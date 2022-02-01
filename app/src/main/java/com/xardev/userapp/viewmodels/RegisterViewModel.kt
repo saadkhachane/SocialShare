@@ -1,22 +1,28 @@
 package com.xardev.userapp.viewmodels
 
-import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import com.xardev.userapp.data.User
 import com.xardev.userapp.repos.*
-import com.xardev.userapp.utils.DataStoreManager
 import com.xardev.userapp.utils.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
+private const val TAG = "RegisterViewModel"
 
 class RegisterViewModel @Inject constructor(
-    var repo: RegisterRepository
+    var repo: RegisterRepositoryImpl
 ) : ViewModel() {
 
     private var _isLoading : MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -51,4 +57,6 @@ class RegisterViewModel @Inject constructor(
             }
         }
     }
+
+
 }

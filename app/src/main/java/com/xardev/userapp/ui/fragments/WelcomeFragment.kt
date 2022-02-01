@@ -1,6 +1,5 @@
-package com.xardev.userapp.fragments
+package com.xardev.userapp.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.xardev.userapp.R
-import com.xardev.userapp.RegisterActivity
 import com.xardev.userapp.databinding.FragmentWelcomeBinding
 
 class WelcomeFragment : Fragment() {

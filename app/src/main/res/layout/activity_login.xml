@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".LoginActivity">
+        tools:context=".ui.activities.LoginActivity">
 
         <TextView
             android:id="@+id/textView"
@@ -58,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Remember me"
-            android:checked="@{viewModel.isRememberEnabled.value}"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 

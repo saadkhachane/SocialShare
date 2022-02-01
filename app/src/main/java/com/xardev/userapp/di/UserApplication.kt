@@ -1,4 +1,4 @@
-package com.xardev.userapp.utils
+package com.xardev.userapp.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

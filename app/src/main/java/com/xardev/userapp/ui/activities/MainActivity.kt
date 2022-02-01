@@ -1,30 +1,25 @@
-package com.xardev.userapp
+package com.xardev.userapp.ui.activities
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Intent
 import android.net.Uri
-import android.os.Binder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.transition.Slide
-import android.util.LayoutDirection
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.Window
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.xardev.userapp.adapters.SocialAdapter
+import com.bumptech.glide.Glide
+import com.xardev.userapp.R
+import com.xardev.userapp.adapters.SocialRecyclerAdapter
 import com.xardev.userapp.databinding.ActivityMainBinding
-import com.xardev.userapp.utils.DataStoreManager
+import com.xardev.userapp.data.local.DataStoreManager
 import com.xardev.userapp.viewmodels.MainViewModel
-import com.xardev.userapp.viewmodels.WelcomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -40,11 +35,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModel: MainViewModel
 
     private lateinit var binder : ActivityMainBinding
-    private val adapter : SocialAdapter by lazy {
-        SocialAdapter(this, null)
+    private val adapter : SocialRecyclerAdapter by lazy {
+        SocialRecyclerAdapter(this, null)
     }
 
-    val dsManager: DataStoreManager = DataStoreManager(this)
+    @Inject
+    lateinit var dsManager: DataStoreManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         setupRecycler()
         setCollectors()
+
         animateViews(binder)
     }
 
@@ -64,9 +61,9 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenCreated {
 
             launch {
-                dsManager.getEmail().collect {
+                dsManager.getUserId().collect {
                     if (it != null)
-                        viewModel.getUser(it)
+                        viewModel.getUserFromServer(it)
                 }
             }
 
@@ -76,7 +73,12 @@ class MainActivity : AppCompatActivity() {
                     .collect {
                         if (it != null){
                             binder.name.text = it.name
-                            binder.image.setImageURI(Uri.parse(it.img_url))
+
+                            Glide.with(this@MainActivity)
+                                .asBitmap()
+                                .load(it.img)
+                                .into(binder.image)
+
                         }
                     }
 

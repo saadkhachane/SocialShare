@@ -1,27 +1,22 @@
-package com.xardev.userapp
+package com.xardev.userapp.ui.activities
 
 import android.content.Intent
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.ActivityLoginBinding
-import com.xardev.userapp.utils.DataStoreManager
+import com.xardev.userapp.data.local.DataStoreManager
 import com.xardev.userapp.utils.exceptionOrNull
 import com.xardev.userapp.utils.getOrNull
 import com.xardev.userapp.utils.isSuccess
 import com.xardev.userapp.viewmodels.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,7 +42,6 @@ class LoginActivity : AppCompatActivity() {
 
         binder.signinBtn.setOnClickListener {
             viewModel.getUserByEmail(binder.emailTxt.text.toString())
-
         }
 
     }

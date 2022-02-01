@@ -1,7 +1,6 @@
-package com.xardev.userapp.utils
+package com.xardev.userapp.data.local
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -16,6 +15,7 @@ class DataStoreManager(val context: Context) {
         val FIRST_LAUNCH_KEY = booleanPreferencesKey("first_launch")
         val REMEMBER_KEY = booleanPreferencesKey("remember")
         val EMAIL_KEY = stringPreferencesKey("email")
+        val USERID_KEY = stringPreferencesKey("id")
         val SESSION_KEY = booleanPreferencesKey("session")
     }
 
@@ -61,6 +61,20 @@ class DataStoreManager(val context: Context) {
         }
     }
 
+
+    // User Id
+    fun getUserId() : Flow<String?>{
+        return context.datastore.data
+            .map {
+                it[USERID_KEY]
+            }
+    }
+
+    suspend fun setUserId(id: String){
+        context.datastore.edit {
+            it[USERID_KEY] = id
+        }
+    }
     // First Launch Info
     fun isFirstLaunch() : Flow<Boolean?> {
         return context.datastore

@@ -13,7 +13,8 @@ import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.SocialItemBinding
 
-class SocialAdapter(var context: Context, var user: User?) : RecyclerView.Adapter<SocialAdapter.SocialViewHolder>() {
+class SocialRecyclerAdapter(var context: Context, var user: User?)
+    : RecyclerView.Adapter<SocialRecyclerAdapter.SocialViewHolder>() {
 
     val list = listOf("","","")
 

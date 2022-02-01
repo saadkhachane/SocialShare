@@ -1,6 +1,7 @@
-package com.xardev.userapp.fragments
+package com.xardev.userapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,18 +9,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.FragmentRegisterMainBinding
+import com.xardev.userapp.utils.Result
+import com.xardev.userapp.viewmodels.RegisterMainFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RegisterMainFragment : Fragment() {
 
     lateinit var binder: FragmentRegisterMainBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-    }
+    @Inject
+    lateinit var viewModel: RegisterMainFragmentViewModel
+
+    var user: User? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +39,23 @@ class RegisterMainFragment : Fragment() {
         // Inflate the layout for this fragment
         binder = DataBindingUtil.inflate(inflater,R.layout.fragment_register_main, container, false)
 
+
+        setClickListeners()
+
+        // For Future versions..
+        //setCollectors()
+
+        return binder.root
+    }
+
+
+    private fun setClickListeners() {
+
         binder.btnNext.setOnClickListener {
+
             if(binder.inputName.text.toString().isNotBlank()){
                 binder.inputLayoutName.error = null
+
                 if (binder.inputEmail.text.toString().isNotBlank()){
 
                     val name = binder.inputName.text.toString()
@@ -40,7 +65,8 @@ class RegisterMainFragment : Fragment() {
 
                     if (p.matcher(email).matches()){
 
-                        val user = User(id = null, name =  name, email = email)
+                        user = User(id = "null", name =  name, email = email)
+
                         val bundle = bundleOf("user" to user)
 
                         findNavController().navigate(
@@ -48,8 +74,8 @@ class RegisterMainFragment : Fragment() {
                             bundle
                         )
 
-
                         binder.inputLayoutEmail.error = null
+
 
                     }else binder.inputLayoutEmail.error = "Please enter a valid email address."
 
@@ -59,7 +85,40 @@ class RegisterMainFragment : Fragment() {
                 binder.inputLayoutName.error = "Please enter your name."
 
         }
+    }
 
-        return binder.root
+    private fun setCollectors() {
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.isLoading
+                .collect {
+                    binder.btnNext.isEnabled = !it
+                }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.result
+                .collect {
+                    if (it is Result.Success){
+
+                        if (user != null){
+                            val bundle = bundleOf("user" to user)
+
+                            findNavController().navigate(
+                                R.id.registerPhotoFragment,
+                                bundle
+                            )
+
+                            binder.inputLayoutEmail.error = null
+                        }
+
+                    }else if(it is Result.Failure){
+                        Snackbar.make(binder.root, it.error.message.toString(), Snackbar.LENGTH_SHORT)
+                            .show()
+
+                    }
+                }
+        }
+
     }
 }

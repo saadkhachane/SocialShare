@@ -1,24 +1,13 @@
 package com.xardev.userapp.viewmodels
-import android.content.Context
-import android.util.Log
 import android.util.Patterns
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.xardev.userapp.data.User
 import com.xardev.userapp.utils.Result
 import com.xardev.userapp.repos.LoginRepository
-import com.xardev.userapp.utils.DataStoreManager
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import com.xardev.userapp.data.local.DataStoreManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 

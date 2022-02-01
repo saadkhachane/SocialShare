@@ -1,10 +1,11 @@
-package com.xardev.userapp.utils
+package com.xardev.userapp.di
 
 import android.content.Context
 import androidx.room.Room
 import com.xardev.userapp.data.local.UserDatabase
-import com.xardev.userapp.data.api.QrApiService
+import com.xardev.userapp.data.remote.ApiService
 import com.xardev.userapp.data.local.UserDao
+import com.xardev.userapp.data.local.DataStoreManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class UserModule {
+class PersistentModule {
 
     @Singleton
     @Provides
@@ -30,18 +31,6 @@ class UserModule {
             .build()
 
         return db.userDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideApi(@ApplicationContext context: Context) : QrApiService {
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        return retrofit.create(QrApiService::class.java)
     }
 
     @Singleton

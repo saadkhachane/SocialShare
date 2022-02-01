@@ -1,4 +1,4 @@
-package com.xardev.userapp.fragments
+package com.xardev.userapp.ui.fragments
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
@@ -14,14 +14,13 @@ import android.view.animation.AnticipateOvershootInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import com.xardev.userapp.MainActivity
+import com.xardev.userapp.ui.activities.MainActivity
 import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.FragmentRegisterResultBinding
-import com.xardev.userapp.utils.DataStoreManager
+import com.xardev.userapp.data.local.DataStoreManager
 import com.xardev.userapp.utils.Result
-import com.xardev.userapp.utils.exceptionOrNull
+import com.xardev.userapp.viewmodels.RegisterResultFragmentViewModel
 import com.xardev.userapp.viewmodels.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -35,10 +34,12 @@ private const val TAG = "here"
 class RegisterResultFragment : Fragment() {
 
     var user : User? = null
+    var img_path : String? = null
 
     @Inject
-    lateinit var viewModel: RegisterViewModel
+    lateinit var viewModel: RegisterResultFragmentViewModel
 
+    @Inject
     lateinit var dsManager: DataStoreManager
 
     lateinit var binder: FragmentRegisterResultBinding
@@ -47,6 +48,7 @@ class RegisterResultFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         user = arguments?.get("user") as User
+        img_path = arguments?.get("img_path") as String
     }
 
     override fun onCreateView(
@@ -55,14 +57,14 @@ class RegisterResultFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binder = DataBindingUtil.inflate(inflater,R.layout.fragment_register_result, container, false)
-        dsManager = DataStoreManager(requireContext())
 
         if (user != null){
             binder.name.text = "${user!!.name}!"
-            binder.image.setImageURI( Uri.parse(user!!.img_url) )
+            binder.image.setImageURI( Uri.parse(img_path) )
 
             setCollectors()
-            viewModel.addUser(user!!)
+            setClickListeners()
+            viewModel.addUserToServer(user!!)
 
         }else {
             findNavController().navigateUp()
@@ -70,6 +72,12 @@ class RegisterResultFragment : Fragment() {
 
 
         return binder.root
+    }
+
+    private fun setClickListeners() {
+        binder.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setCollectors() {
@@ -86,22 +94,16 @@ class RegisterResultFragment : Fragment() {
             launch {
                 viewModel.result
                     .collect {
-                        if (it is Result.Success<*>){
-                            if (it != null){
-                                dsManager.setSessionActive(true)
-                                dsManager.setFirstLaunch(false)
-                                user?.email?.let { it1 -> dsManager.setEmail(it1) }
-                                dsManager.setSessionActive(true)
-
-                                Log.d(TAG, "Success: ${it.value} ")
+                        if (it is Result.Success){
+                            if (it.value != null){
                                 binder.resultAnim.setAnimation(R.raw.success)
                                 binder.resultAnim.playAnimation()
                                 setLoading()
-                                delay(3500)
+                                delay(5000)
                                 startActivity(Intent(activity, MainActivity::class.java))
                                 activity?.finish()
                             }
-                        }else if (it is Result.Failure<*>){
+                        }else if (it is Result.Failure){
                             Log.d(TAG, "Failure: ${it.error.message} ")
 
                             binder.congratulation.text = "Oups.."
@@ -110,7 +112,10 @@ class RegisterResultFragment : Fragment() {
 
                             binder.resultAnim.setAnimation(R.raw.failure)
                             binder.resultAnim.playAnimation()
+
+                            binder.btnBack.visibility = View.VISIBLE
                             setLoading()
+
                         }
 
                     }
@@ -137,6 +142,7 @@ class RegisterResultFragment : Fragment() {
             delay(300)
             animateView(binder.title)
             animateView(binder.subtitle)
+            animateView(binder.btnBack)
         }
 
     }

@@ -1,20 +1,13 @@
 package com.xardev.userapp.viewmodels
 
 import com.xardev.userapp.data.User
-import com.xardev.userapp.repos.RegisterRepository
 import com.xardev.userapp.repos.RegisterRepositoryMock
 import com.xardev.userapp.utils.Result
 import com.xardev.userapp.utils.exceptionOrNull
 import com.xardev.userapp.utils.getOrNull
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.Assert
 import org.junit.Before
 
 import org.junit.Assert.*
@@ -22,10 +15,8 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.junit.Assert.*
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.InjectMocks
 
 @RunWith(JUnit4::class)
 @ExperimentalCoroutinesApi

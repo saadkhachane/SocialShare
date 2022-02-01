@@ -1,8 +1,7 @@
-package com.xardev.userapp.fragments
+package com.xardev.userapp.ui.fragments
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,18 +12,18 @@ import androidx.navigation.fragment.findNavController
 import com.xardev.userapp.R
 import com.xardev.userapp.data.User
 import com.xardev.userapp.databinding.FragmentRegisterInfoBinding
-import com.xardev.userapp.databinding.FragmentRegisterMainBinding
-import java.net.URI
 
 class RegisterInfoFragment : Fragment() {
 
     var user : User? = null
+    var img_path : String? = null
 
     lateinit var binder: FragmentRegisterInfoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         user = arguments?.get("user") as User
+        img_path = arguments?.get("img_path") as String
     }
 
     override fun onCreateView(
@@ -37,7 +36,7 @@ class RegisterInfoFragment : Fragment() {
         if (user != null){
 
             binder.name.text = "${user!!.name}!"
-            binder.image.setImageURI( Uri.parse(user!!.img_url) )
+            binder.image.setImageURI( Uri.parse(img_path) )
             binder.imageView.visibility = View.INVISIBLE
 
         }else {
@@ -47,11 +46,14 @@ class RegisterInfoFragment : Fragment() {
 
         binder.btnFinish.setOnClickListener {
 
-            user?.phone = binder.inputPhone.toString()
-            user?.work = binder.inputWork.toString()
-            user?.bio = binder.inputBio.toString()
+            user?.phone = binder.inputPhone.text.toString()
+            user?.work = binder.inputWork.text.toString()
+            user?.bio = binder.inputBio.text.toString()
 
-            val bundle = bundleOf("user" to user)
+            val bundle = bundleOf(
+                "user" to user,
+                "img_path" to img_path
+            )
 
             findNavController().navigate(
                 R.id.registerResultFragment,
