@@ -1,7 +1,8 @@
 package com.xardev.userapp.data.local
 
 import androidx.room.*
-import com.xardev.userapp.data.User
+import com.xardev.userapp.data.local.entity.UserEntity
+import com.xardev.userapp.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,13 +20,13 @@ interface UserDao {
     @Query("SELECT COUNT(*) FROM User WHERE User.email == :email")
     fun userExists(email: String) : Int
 
-    @Insert
-    suspend fun addUser(user: User)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addUser(user: UserEntity)
 
-    @Update(onConflict = OnConflictStrategy.ABORT)
-    suspend fun updateUser(user: User)
+    @Update
+    suspend fun updateUser(user: UserEntity)
 
     @Delete
-    suspend fun deleteUser(user: User)
+    suspend fun deleteUser(user: UserEntity)
 
 }

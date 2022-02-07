@@ -3,10 +3,10 @@ package com.xardev.userapp
 import android.util.Log
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.xardev.userapp.data.User
+import com.xardev.userapp.domain.model.User
 import com.xardev.userapp.data.local.UserDatabase
 import com.xardev.userapp.data.local.UserDao
-import com.xardev.userapp.utils.Result.Success
+import com.xardev.userapp.core.utils.Result.Success
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import org.junit.Before

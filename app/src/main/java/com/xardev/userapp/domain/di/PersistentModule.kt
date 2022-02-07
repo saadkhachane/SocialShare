@@ -1,0 +1,44 @@
+package com.xardev.userapp.domain.di
+
+import android.content.Context
+import androidx.room.Room
+import com.xardev.userapp.data.local.UserDatabase
+import com.xardev.userapp.data.local.UserDao
+import com.xardev.userapp.core.utils.DataStoreManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+class PersistentModule {
+
+    @Singleton
+    @Provides
+    fun provideDao(@ApplicationContext context: Context) : UserDao {
+
+        val db = Room.databaseBuilder(
+            context,
+            UserDatabase::class.java,
+            "user.db"
+        ).fallbackToDestructiveMigration()
+            .build()
+
+        return db.userDao
+    }
+
+    @Singleton
+    @Provides
+    fun provideDsManager(@ApplicationContext context: Context) : DataStoreManager {
+        return DataStoreManager(context)
+    }
+
+
+
+
+
+
+}

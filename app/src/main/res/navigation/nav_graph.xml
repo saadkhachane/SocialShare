@@ -7,12 +7,12 @@
 
     <activity
         android:id="@+id/registerActivity"
-        android:name="com.xardev.userapp.ui.activities.RegisterActivity"
+        android:name="com.xardev.userapp.presentation.ui.activities.RegisterActivity"
         android:label="RegisterActivity"
         tools:layout="@layout/activity_register"/>
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.xardev.userapp.ui.fragments.WelcomeFragment"
+        android:name="com.xardev.userapp.presentation.ui.fragments.WelcomeFragment"
         android:label="fragment_welcome"
         tools:layout="@layout/fragment_welcome" >
         <action
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerMainFragment"
-        android:name="com.xardev.userapp.ui.fragments.RegisterMainFragment"
+        android:name="com.xardev.userapp.presentation.ui.fragments.RegisterMainFragment"
         android:label="RegisterMainFragment"
         tools:layout="@layout/fragment_register_main" >
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerPhotoFragment"
-        android:name="com.xardev.userapp.ui.fragments.RegisterPhotoFragment"
+        android:name="com.xardev.userapp.presentation.ui.fragments.RegisterPhotoFragment"
         android:label="RegisterPhotoFragment"
         tools:layout="@layout/fragment_register_photo" >
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerInfoFragment"
-        android:name="com.xardev.userapp.ui.fragments.RegisterInfoFragment"
+        android:name="com.xardev.userapp.presentation.ui.fragments.RegisterInfoFragment"
         android:label="RegisterInfoFragment"
         tools:layout="@layout/fragment_register_info" >
         <action
@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerResultFragment"
-        android:name="com.xardev.userapp.ui.fragments.RegisterResultFragment"
+        android:name="com.xardev.userapp.presentation.ui.fragments.RegisterResultFragment"
         android:label="RegisterResultFragment"
         tools:layout="@layout/fragment_register_result"/>
 </navigation>

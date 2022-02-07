@@ -9,13 +9,13 @@
             type="android.view.View" />
         <variable
             name="viewModel"
-            type="com.xardev.userapp.viewmodels.LoginViewModel" />
+            type="com.xardev.userapp.presentation.viewmodels.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activities.LoginActivity">
+        tools:context=".presentation.ui.activities.LoginActivity">
 
         <TextView
             android:id="@+id/textView"

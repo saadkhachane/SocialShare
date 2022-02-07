@@ -1,7 +1,6 @@
 package com.xardev.userapp.data.remote
 
-import com.xardev.userapp.data.User
-import kotlinx.coroutines.flow.Flow
+import com.xardev.userapp.domain.model.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -29,7 +28,7 @@ interface ApiService {
         @Body user: RequestBody
     ) : Call<ResponseBody>
 
-    @POST("api/userExists.php")
+    @GET("api/userExists.php")
     fun userExists(
         @Query("secretKey") apiKey: String,
         @Body user: RequestBody
