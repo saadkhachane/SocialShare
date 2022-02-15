@@ -122,4 +122,10 @@ dependencies {
 
     // Scalars
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+
+    // FlexBox
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // Image cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 }

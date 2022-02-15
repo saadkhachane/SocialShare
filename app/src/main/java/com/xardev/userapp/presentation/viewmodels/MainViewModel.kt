@@ -1,22 +1,16 @@
 package com.xardev.userapp.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xardev.userapp.domain.model.User
-import com.xardev.userapp.core.utils.DataStoreManager
-import com.xardev.userapp.domain.repos.MainRepositoryImpl
 import com.xardev.userapp.core.utils.Result
+import com.xardev.userapp.core.utils.isLoading
 import com.xardev.userapp.domain.use_case.GetUserUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 private const val TAG = "MainViewModel"
@@ -26,74 +20,33 @@ class MainViewModel @Inject constructor(
     val getUserUseCase : GetUserUseCase
 ) : ViewModel() {
 
-    private var _isLoading : MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var isLoading : StateFlow<Boolean> = _isLoading
-
     private var _result: MutableStateFlow<Result<*>> = MutableStateFlow(Result.Success(null))
     var result: StateFlow<Result<*>> = _result
 
     private var _user: MutableStateFlow<User?> = MutableStateFlow(null)
     var user: StateFlow<User?> = _user
 
-    fun getUser(email: String) {
-
-        /*viewModelScope.launch(Dispatchers.IO) {
-            repo.userDao.getUserByEmail(email)
-                .collect {
-                    if (it != null){
-                        _user.value = it
-                    }
-                }
-        }*/
-    }
-
-    fun getUserFromServer(id: String) {
+    fun getUser(id: String) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                /*_isLoading.value = true
 
+            getUserUseCase(id)
+                .collect { result ->
 
-                repo.getUserFromServer(id)
-                    .enqueue(object : Callback<User> {
+                    when(result) {
 
-                        override fun onResponse(call: Call<User>, response: Response<User>) {
-
-                            if ( response.isSuccessful && response.body() != null){
-                                //Log.d(TAG, "onResponse: " + response.body()?.string())
-
-                                kotlin.runCatching {
-                                    val user = response.body()
-
-                                    _user.value = user
-                                    _result.value = Result.Success(user)
-
-                                }.onFailure {
-                                    Log.d(TAG, "onFailure : ${it.message}")
-                                }
-
-                            }else {
-                                _result.value = Result.Failure<Throwable>(Throwable("Unknown error."))
-                            }
-
+                        is Result.Loading -> { _result.value = result}
+                        is Result.Success -> {
+                            _user.value = result.value as User
+                            _result.value = result
                         }
+                        is Result.Failure -> { _result.value = result }
 
-                        override fun onFailure(call: Call<User>, t: Throwable) {
-                            Log.d(TAG, "onFailure: ${t.message}")
+                    }
 
-                            _result.value = Result.Failure<Throwable>(Throwable(t))
+                }
 
-                        }
-                    })
-
-                _isLoading.value = false
-
-            }.onFailure {
-                _isLoading.value = false
-                _result.value = Result.Failure<Throwable>(it)
-            }*/
         }
     }
 
-    }
 }

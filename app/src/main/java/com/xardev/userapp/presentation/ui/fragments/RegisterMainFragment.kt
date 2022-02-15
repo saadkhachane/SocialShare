@@ -68,7 +68,7 @@ class RegisterMainFragment : Fragment() {
                         val bundle = bundleOf("user" to user)
 
                         findNavController().navigate(
-                            R.id.registerPhotoFragment,
+                            R.id.action_registerMainFragment_to_registerPhotoFragment,
                             bundle
                         )
 

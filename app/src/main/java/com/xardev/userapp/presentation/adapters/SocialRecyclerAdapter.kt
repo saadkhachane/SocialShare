@@ -3,20 +3,23 @@ package com.xardev.userapp.presentation.adapters
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.xardev.userapp.R
-import com.xardev.userapp.domain.model.User
 import com.xardev.userapp.databinding.SocialItemBinding
+import com.xardev.userapp.domain.model.SocialProfile
 
-class SocialRecyclerAdapter(var context: Context, var user: User?)
+class SocialRecyclerAdapter(var context: Context)
     : RecyclerView.Adapter<SocialRecyclerAdapter.SocialViewHolder>() {
 
-    val list = listOf("","","")
+    private var list : List<SocialProfile> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SocialViewHolder {
         val binder : SocialItemBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.social_item, parent, false )
@@ -26,26 +29,46 @@ class SocialRecyclerAdapter(var context: Context, var user: User?)
     override fun onBindViewHolder(holder: SocialViewHolder, position: Int) {
         val binder = holder.binder
 
-        animateItem(binder.root, position)
+        if (list.isNotEmpty() ){
 
-        when(position) {
-            0 -> binder.root.background = context.getDrawable(R.drawable.social_item_1)
-            list.size - 1 -> binder.root.background = context.getDrawable(R.drawable.social_item_3)
-            else -> binder.root.background = context.getDrawable(R.drawable.social_item_2)
+            val sp = list[position]
+
+            if (position < list.size -1 ) {
+
+                Glide.with(context)
+                    .asBitmap()
+                    .load(sp.icon)
+                    .into(binder.icon)
+
+                binder.icon.setOnClickListener {
+
+                    if (!sp.profile.isNullOrEmpty()){
+                        if (!sp.profile!!.startsWith("http://") && !sp.profile!!.startsWith("https://"))
+                            sp.profile = "http://" + sp.profile
+
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW,
+                                Uri.parse(sp.profile)),
+                        )
+
+                    }
+                }
+
+            }else {
+
+                binder.icon.setImageDrawable(context.getDrawable(R.drawable.ic_add_social))
+
+                binder.icon.setOnClickListener {
+
+
+
+                }
+
+            }
+
+
         }
 
-        binder.add.setOnClickListener {
-            binder.inputLayout.visibility = View.VISIBLE
-            binder.btnFinish.visibility = View.VISIBLE
-        }
-        binder.root.setOnClickListener {
-            binder.inputLayout.visibility = View.VISIBLE
-            binder.btnFinish.visibility = View.VISIBLE
-        }
-        binder.btnFinish.setOnClickListener {
-            binder.inputLayout.visibility = View.GONE
-            binder.btnFinish.visibility = View.GONE
-        }
     }
 
     override fun getItemCount(): Int {
@@ -54,6 +77,12 @@ class SocialRecyclerAdapter(var context: Context, var user: User?)
 
     class SocialViewHolder(var binder: SocialItemBinding) : RecyclerView.ViewHolder(binder.root){
 
+    }
+
+    fun updateList(list: ArrayList<SocialProfile>) {
+        list.add( SocialProfile("", "", "", null) )
+        this.list = list
+        notifyDataSetChanged()
     }
 
     private fun animateItem(view: View, pos: Int){

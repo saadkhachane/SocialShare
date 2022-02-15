@@ -1,4 +1,4 @@
-package com.xardev.userapp.domain.di
+package com.xardev.userapp.di
 
 import android.content.Context
 import androidx.room.Room

@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -25,6 +26,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import com.xardev.userapp.R
 import com.xardev.userapp.domain.model.User
 import com.xardev.userapp.databinding.FragmentRegisterPhotoBinding
@@ -137,7 +140,7 @@ class RegisterPhotoFragment : Fragment() {
                 )
 
                 findNavController().navigate(
-                    R.id.registerInfoFragment,
+                    R.id.action_registerPhotoFragment_to_registerInfoFragment,
                     bundle
                 )
 
@@ -314,8 +317,6 @@ class RegisterPhotoFragment : Fragment() {
                 return
             }
 
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
             else -> {
                 // Ignore all other requests.
             }
@@ -342,7 +343,6 @@ class RegisterPhotoFragment : Fragment() {
             1 -> {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
-
                         try {
 
                             val bitmap = data.extras?.get("data") as Bitmap
@@ -350,21 +350,13 @@ class RegisterPhotoFragment : Fragment() {
                             val file = createImageFile()
                             saveImageFile(file, bitmap)
 
-                            user?.img = file.name
-                            img_path = file.absolutePath
-                            binder.image.setImageURI(Uri.parse(file.absolutePath))
-
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                viewModel.uploadImage(file)
-                            }
-
-                            binder.imageLayout.visibility = View.GONE
-
+                            performCrop(Uri.fromFile(file))
 
                         } catch (ex: IOException) {
                             // Error occurred while creating the File
                             Log.d(TAG, "onActivityResult: ${ex.message}")
                         }
+
 
                     }
 
@@ -374,28 +366,69 @@ class RegisterPhotoFragment : Fragment() {
                 }
             }
 
+            CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                val result = CropImage.getActivityResult(data)
+
+                if (resultCode == RESULT_OK) {
+                    if (data != null) {
+
+                        try {
+
+                            val file = File(result.getUri().path)
+
+                            user?.img = file.name
+                            img_path = file.absolutePath
+                            binder.image.setImageURI(Uri.parse(file.absolutePath))
+
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                viewModel.uploadImage(file)
+                            }
+
+
+                        } catch (ex: Exception) {
+                            // Error occurred while creating the File
+                            Toast.makeText(context, "Couldn't crop image.", Toast.LENGTH_LONG).show()
+                            Log.d(TAG, "onActivityResult: ${ex.message}")
+                        }
+
+                    }
+
+
+                } else {
+                    Log.d(TAG, "image: ${data?.data}")
+                }
+
+            }
+
+
         }
     }
 
     val getContent = registerForActivityResult(GetContent()) { uri: Uri? ->
 
         if(uri != null) {
-            val bitmap: Bitmap = getBitmap(context?.contentResolver, uri)
 
-            val file = createImageFile()
-            saveImageFile(file, bitmap)
-
-            user?.img = file.name
-            img_path = file.absolutePath
-            binder.image.setImageURI(Uri.parse(file.absolutePath))
-
-            lifecycleScope.launch(Dispatchers.IO) {
-                viewModel.uploadImage(file)
-            }
-
-            binder.imageLayout.visibility = View.GONE
+            performCrop(uri)
         }
 
+    }
+
+    private fun performCrop(picUri: Uri) {
+        try {
+
+            CropImage.activity(picUri)
+                .setAspectRatio(1,1)
+                .setCropShape(CropImageView.CropShape.OVAL)
+                .setMinCropResultSize(100,100)
+                .setMaxCropResultSize(1000,1000)
+                .start(requireContext(), this)
+        }
+        catch (anfe: Exception) {
+            // display an error message
+            val errorMessage = "Couldn't edit image."
+            val toast: Toast = Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT)
+            toast.show()
+        }
     }
 
     @Throws(IOException::class)

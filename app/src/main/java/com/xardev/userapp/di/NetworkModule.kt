@@ -1,4 +1,4 @@
-package com.xardev.userapp.domain.di
+package com.xardev.userapp.di
 
 import com.xardev.userapp.data.remote.ApiService
 import com.xardev.userapp.core.Constants

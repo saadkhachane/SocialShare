@@ -7,6 +7,7 @@ import com.xardev.userapp.core.utils.Result.*
 import com.xardev.userapp.core.utils.isLoading
 import com.xardev.userapp.domain.use_case.UploadUserImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
@@ -27,7 +28,7 @@ class RegisterPhotoFragmentViewModel @Inject constructor(
 
     fun uploadImage(file: File) {
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             uploadUserImage(file)
                 .collect { result ->

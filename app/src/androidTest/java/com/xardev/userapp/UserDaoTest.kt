@@ -34,7 +34,7 @@ class UserDaoTest {
         ).allowMainThreadQueries()
             .build()
 
-        dao = db.userDao()
+        dao = db.userDao
     }
 
     @DelicateCoroutinesApi

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.xardev.userapp.domain.model.User
-import com.xardev.userapp.domain.repos.RegisterRepositoryImpl
+import com.xardev.userapp.data.repos.RegisterRepositoryImpl
 import com.xardev.userapp.core.utils.Result
 import com.xardev.userapp.core.utils.Result.Success
 import kotlinx.coroutines.Dispatchers
@@ -33,49 +33,6 @@ class RegisterMainFragmentViewModel @Inject constructor(
 
     fun userExistsInServer(user: User) {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            kotlin.runCatching {
-                _isLoading.value = true
-
-                val jsonUser = Gson().toJson(user).toString()
-                val requestBody = jsonUser.toRequestBody(
-                    "application/json; charset=utf-8".toMediaTypeOrNull())
-
-
-                repo.userExistsInServer(requestBody)
-                    .enqueue(object : Callback<ResponseBody>{
-
-                        override fun onResponse(
-                            call: Call<ResponseBody>,
-                            response: Response<ResponseBody>
-                        ) {
-
-                            val res = response.body()?.string()
-                            Log.d(TAG, "onResponse: ${res}")
-
-                            if (res.equals("false",true)){
-                                _result.value = Success(res)
-                            }else {
-                                _result.value = Result.Failure<Throwable>(Throwable("A user already found with the same email."))
-                            }
-
-                        }
-
-                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                            Log.d(TAG, "onFailure: ${t.message}")
-
-                            _result.value = Result.Failure<Throwable>(Throwable(t))
-
-                        }
-                    })
-
-                _isLoading.value = false
-
-            }.onFailure {
-                _isLoading.value = false
-                _result.value = Result.Failure<Throwable>(it)
-            }
-        }
     }
 
 }

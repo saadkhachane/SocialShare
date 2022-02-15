@@ -11,31 +11,47 @@ import com.xardev.userapp.data.local.entity.UserEntity
 data class User(
     var id: String,
     var name: String,
-    var email: String
+    var email: String,
+    var phone: String? = null,
+    var work: String? = null,
+    var bio: String? = null,
+    var img: String? = null,
+    var sub_date: String? = null,
+    var qr_url: String? = null,
+    var enabled: Boolean? = true,
+    var socialProfileList: List<SocialProfile> = emptyList()
 
 ) : Parcelable {
 
-    var phone: String? = null
-    var work: String? = null
-    var bio: String? = null
-    var img: String? = null
-    var sub_date: String? = null
-    var qr_url: String? = null
-    var enabled: Boolean? = true
 
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readString()!!
+        parcel.readString()!!,
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+        TODO("socialProfileList")
     ) {
-        phone = parcel.readString()
-        work = parcel.readString()
-        bio = parcel.readString()
-        img = parcel.readString()
-        sub_date = parcel.readString()
-        qr_url = parcel.readString()
-        enabled = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
     }
+
+    fun toUserEntity() : UserEntity =
+        UserEntity(
+            id = id,
+            name = name,
+            email = email,
+            phone = phone,
+            work = work,
+            bio = bio,
+            img = img,
+            sub_date = sub_date,
+            qr_url = qr_url,
+            enabled = enabled.toString()
+        )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(id)
@@ -63,18 +79,5 @@ data class User(
             return arrayOfNulls(size)
         }
     }
-
-    fun toUserEntity() : UserEntity =
-        UserEntity(
-            id = id,
-            name = name,
-            email = email,
-            phone = phone,
-            work = work,
-            bio = bio,
-            img = img,
-            sub_date = sub_date,
-            qr_url = qr_url
-        )
 
 }

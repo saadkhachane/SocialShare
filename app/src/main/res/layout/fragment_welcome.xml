@@ -29,44 +29,84 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="24dp"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/proxima_extra_bold"
             android:text="Hey!"
             android:textColor="@color/purple"
             android:textSize="48sp"
+            app:layout_constraintBottom_toTopOf="@+id/welcome_subtitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_img" />
+            app:layout_constraintTop_toBottomOf="@+id/welcome_img"
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/welcome_subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:fontFamily="@font/montserrat_bold"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/proxima_bold"
             android:text="Let's start by creating  your profile."
             android:textColor="@color/black"
             android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_start_shadow"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/welcome_title"
             app:layout_constraintTop_toBottomOf="@+id/welcome_title" />
 
-        <Button
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_start_shadow"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0.5"
+            app:cardBackgroundColor="@color/linkedin"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_start"
+            app:layout_constraintEnd_toEndOf="@+id/btn_start"
+            app:layout_constraintStart_toStartOf="@+id/btn_start"
+            app:layout_constraintTop_toTopOf="@+id/btn_start" />
+
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/btn_start"
-            style="@style/btn_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="24dp"
-            android:background="@drawable/btn_start"
-            android:fontFamily="@font/montserrat_bold"
-            android:paddingHorizontal="24dp"
-            android:text="Start now"
-            android:textSize="18sp"
-            app:icon="@drawable/arrow_forward"
-            app:iconGravity="end"
+            android:clickable="true"
+            android:outlineProvider="none"
+            app:cardBackgroundColor="@color/purple"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_subtitle"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    style="@style/text_primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </com.google.android.material.card.MaterialCardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

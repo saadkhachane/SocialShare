@@ -142,6 +142,7 @@ class RegisterResultFragment : Fragment() {
             animateView(binder.title)
             animateView(binder.subtitle)
             animateView(binder.btnBack)
+            animateView(binder.btnBackShadow)
         }
 
     }

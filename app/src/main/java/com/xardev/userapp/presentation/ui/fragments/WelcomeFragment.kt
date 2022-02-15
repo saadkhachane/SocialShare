@@ -27,7 +27,7 @@ class WelcomeFragment : Fragment() {
         binder = DataBindingUtil.inflate(inflater,R.layout.fragment_welcome, container, false)
 
         binder.btnStart.setOnClickListener {
-            findNavController().navigate(R.id.registerMainFragment)
+            findNavController().navigate(R.id.action_welcomeFragment_to_registerMainFragment)
         }
 
         return binder.root

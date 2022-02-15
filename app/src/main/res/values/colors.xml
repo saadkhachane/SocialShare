@@ -5,10 +5,17 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#333333</color>
+    <color name="primary">#333333</color>
+    <color name="secondary">#A6A9AD</color>
+    <color name="background">#F9F9F9</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_gray">#E1E1E1</color>
+    <color name="lighter_gray">#F9F9F9</color>
     <color name="form">#F9F9F9</color>
     <color name="icon_button">#F9F9F9</color>
     <color name="ripple">#EEEEEE</color>
     <color name="text_field">#EFEFEF</color>
+
+
+    <color name="linkedin">#007EBB</color>
 </resources>

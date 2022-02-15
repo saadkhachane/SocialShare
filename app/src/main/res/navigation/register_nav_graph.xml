@@ -28,7 +28,9 @@
         tools:layout="@layout/fragment_register_main" >
         <action
             android:id="@+id/action_registerMainFragment_to_registerPhotoFragment"
-            app:destination="@id/registerPhotoFragment" />
+            app:destination="@id/registerPhotoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/registerPhotoFragment"
@@ -37,7 +39,9 @@
         tools:layout="@layout/fragment_register_photo" >
         <action
             android:id="@+id/action_registerPhotoFragment_to_registerInfoFragment"
-            app:destination="@id/registerInfoFragment" />
+            app:destination="@id/registerInfoFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/registerInfoFragment"
@@ -46,7 +50,9 @@
         tools:layout="@layout/fragment_register_info" >
         <action
             android:id="@+id/action_registerInfoFragment_to_registerResultFragment"
-            app:destination="@id/registerResultFragment" />
+            app:destination="@id/registerResultFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/registerResultFragment"

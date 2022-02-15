@@ -1,10 +1,11 @@
-package com.xardev.userapp.domain.di
+package com.xardev.userapp.di
 
 import com.xardev.userapp.core.utils.DataStoreManager
-import com.xardev.userapp.domain.repos.MainRepositoryImpl
-import com.xardev.userapp.domain.repos.RegisterRepositoryImpl
+import com.xardev.userapp.data.repos.MainRepositoryImpl
+import com.xardev.userapp.data.repos.RegisterRepositoryImpl
 import com.xardev.userapp.domain.use_case.AddUserUseCase
 import com.xardev.userapp.domain.use_case.GetUserUseCase
+import com.xardev.userapp.domain.use_case.UpdateUserUseCase
 import com.xardev.userapp.domain.use_case.UploadUserImageUseCase
 import dagger.Module
 import dagger.Provides
@@ -35,6 +36,13 @@ class UseCaseModule {
     fun provideUploadUserUseCase(repo : RegisterRepositoryImpl)
             : UploadUserImageUseCase {
         return UploadUserImageUseCase(repo)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateUserUseCase(repo : MainRepositoryImpl, dsManager : DataStoreManager)
+            : UpdateUserUseCase {
+        return UpdateUserUseCase(repo, dsManager)
     }
 
 }

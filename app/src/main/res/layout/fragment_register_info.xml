@@ -53,7 +53,7 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/proxima_bold"
             android:textColor="@color/purple"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="@+id/welcome_subtitle"
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/proxima_bold"
             android:text="You're almost done"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/proxima_bold"
             android:text="Is there anything else you want to share ?"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -136,7 +136,7 @@
                     style="@style/text_filed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/proxima_bold"
                     android:inputType="phone"
                     android:singleLine="true"
                     android:textSize="20sp" />
@@ -162,7 +162,7 @@
                     style="@style/text_filed"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
+                    android:fontFamily="@font/proxima_bold"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
                     android:textSize="20sp" />
@@ -191,30 +191,110 @@
                     android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_back_shadow"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:cardCornerRadius="15dp"
+                android:alpha="0.5"
+                app:cardElevation="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_back"
+                app:layout_constraintEnd_toEndOf="@+id/btn_back"
+                app:layout_constraintStart_toStartOf="@+id/btn_back"
+                app:layout_constraintTop_toTopOf="@+id/btn_back"/>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btn_back"
-                style="@style/btn_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="24dp"
-                android:paddingHorizontal="50dp"
-                android:text="Back"
+                android:clickable="true"
+                android:outlineProvider="none"
+                app:cardBackgroundColor="@color/purple"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/input_layout_bio" />
+                app:layout_constraintTop_toBottomOf="@+id/input_layout_bio">
 
-            <Button
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/text_primary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="50dp"
+                        android:text="Back"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_finish_shadow"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:cardCornerRadius="15dp"
+                android:alpha="0.5"
+                app:cardElevation="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_finish"
+                app:layout_constraintEnd_toEndOf="@+id/btn_finish"
+                app:layout_constraintStart_toStartOf="@+id/btn_finish"
+                app:layout_constraintTop_toTopOf="@+id/btn_finish"/>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btn_finish"
-                style="@style/btn_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_marginEnd="32dp"
-                android:paddingHorizontal="50dp"
-                android:text="Finish"
+                android:clickable="true"
+                android:outlineProvider="none"
+                app:cardBackgroundColor="@color/purple"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btn_back" />
+                app:layout_constraintTop_toTopOf="@+id/btn_back">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/text_primary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="50dp"
+                        android:text="Next"
+                        android:textSize="18sp"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

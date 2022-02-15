@@ -1,5 +1,6 @@
 package com.xardev.userapp.data.remote
 
+import com.xardev.userapp.data.remote.dto.UserDto
 import com.xardev.userapp.domain.model.User
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -35,10 +36,10 @@ interface ApiService {
     ) : Call<ResponseBody>
 
     @GET("api/getUser.php")
-    fun getUser(
+    suspend fun getUser(
         @Query("secretKey") apiKey: String,
         @Query("id")  id: String
-    ) : Call<User>
+    ) : UserDto
 
 
 }
