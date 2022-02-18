@@ -7,6 +7,7 @@ import com.xardev.userapp.data.remote.ApiService
 import com.xardev.userapp.core.Constants
 import com.xardev.userapp.core.utils.DataStoreManager
 import com.xardev.userapp.core.utils.Result
+import com.xardev.userapp.core.utils.Result.*
 import com.xardev.userapp.domain.repos.RegisterRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,8 +16,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import retrofit2.HttpException
 import retrofit2.awaitResponse
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 
 class RegisterRepositoryImpl @Inject constructor(
@@ -30,7 +33,7 @@ class RegisterRepositoryImpl @Inject constructor(
 
             kotlin.runCatching {
 
-                emit(Result.Loading<Boolean>(true))
+                emit(Loading<Boolean>(true))
 
                 val jsonUser = Gson().toJson(user).toString()
                 val requestBody = jsonUser.toRequestBody(
@@ -57,25 +60,25 @@ class RegisterRepositoryImpl @Inject constructor(
                             dsManager.setSessionActive(true)
                             dsManager.setFirstLaunch(false)
 
-                            emit(Result.Loading<Boolean>(false))
-                            emit(Result.Success(user))
+                            emit(Loading<Boolean>(false))
+                            emit(Success(user))
 
                         }else {
-                            emit(Result.Loading<Boolean>(false))
-                            emit(Result.Failure<Throwable>(Throwable(error)))
+                            emit(Loading<Boolean>(false))
+                            emit(Failure<Throwable>(Throwable(error)))
                         }
 
                     }
 
                 }else {
-                    emit(Result.Loading<Boolean>(false))
-                    emit(Result.Failure<Throwable>(Throwable("Unknown error.")))
+                    emit(Loading<Boolean>(false))
+                    emit(Failure<Throwable>(Throwable("Unknown error.")))
                 }
 
 
             }.onFailure {
-                emit(Result.Loading<Boolean>(false))
-                emit(Result.Failure<Throwable>(it))
+                emit(Loading<Boolean>(false))
+                emit(Failure<Throwable>(it))
             }
 
         }
@@ -84,27 +87,36 @@ class RegisterRepositoryImpl @Inject constructor(
     override suspend fun uploadImage(file : File): Flow<Result<*>> {
         return flow {
 
-            emit(Result.Loading<Boolean>(true))
+            try {
+            emit(Loading<Boolean>(true))
 
             val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val fileBody = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
-            val response = api.uploadImage(Constants.API_KEY, fileBody).awaitResponse()
 
-            if (response.isSuccessful) {
+                val response = api.uploadImage(Constants.API_KEY, fileBody).awaitResponse()
 
-                response.body()?.let { body ->
-                    emit(Result.Success(body.string()))
+                if (response.isSuccessful) {
+
+                    response.body()?.let { body ->
+                        emit(Success(body.string()))
+                    }
+
+                }else {
+
+                    response.errorBody()?.let {  body ->
+                        emit(Failure<Throwable>(Throwable(body.string())))
+                    }
                 }
-
-            }else {
-
-                response.errorBody()?.let {  body ->
-                    emit(Result.Failure<Throwable>(Throwable(body.string())))
-                }
+            }catch (e: IOException) {
+                emit(Failure<Throwable>(Throwable("Please check you internet connection and try again.")))
+            }
+            catch (e: Exception) {
+                emit(Failure<Throwable>(e))
             }
 
-            emit(Result.Loading<Boolean>(false))
+
+            emit(Loading<Boolean>(false))
 
         }
     }

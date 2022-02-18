@@ -29,6 +29,8 @@ import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.xardev.userapp.R
 import com.xardev.userapp.core.utils.Result
+import com.xardev.userapp.core.utils.Result.*
+import com.xardev.userapp.core.utils.isLoading
 import com.xardev.userapp.databinding.FragmentMainPhotoBinding
 import com.xardev.userapp.domain.model.User
 import com.xardev.userapp.presentation.viewmodels.MainPhotoFragmentViewModel
@@ -147,64 +149,73 @@ class MainPhotoFragment : Fragment() {
     private fun setCollectors() {
 
         lifecycleScope.launchWhenStarted {
-            viewModel.isLoading
-                .collect {
-                    if (it) {
-                        binder.progressBar.show()
-                        binder.resultAnim.visibility = View.INVISIBLE
-                        binder.btnSave.isEnabled = false
-                        binder.btnBack.isEnabled = false
-
-                    } else {
-                        binder.progressBar.hide()
-                        binder.resultAnim.visibility = View.VISIBLE
-                        binder.btnSave.isEnabled = true
-                        binder.btnBack.isEnabled = true
-
-                    }
-                }
-        }
-
-        lifecycleScope.launchWhenStarted {
             viewModel.result
-                .collect { it ->
-                    if (it is Result.Success) {
-                        it.value?.let{ value ->
+                .collect { result ->
 
-                            binder.btnSave.visibility = View.VISIBLE
+                    when (result) {
 
-                            if(value.toString() != "ok"){
+                        is Loading -> {
+                            if (result.isLoading) {
+                                binder.progressBar.show()
+                                binder.resultAnim.visibility = View.INVISIBLE
+                                binder.btnSave.isEnabled = false
+                                binder.btnBack.isEnabled = false
 
-                                Snackbar.make(binder.root, value.toString(), Snackbar.LENGTH_LONG)
-                                    .show()
+                            } else {
+                                binder.progressBar.hide()
+                                binder.resultAnim.visibility = View.VISIBLE
+                                binder.btnSave.isEnabled = true
+                                binder.btnBack.isEnabled = true
+                            }
+                        }
+
+                        is Success -> {
+
+                            result.value?.let { value ->
+
+                                binder.btnSave.visibility = View.VISIBLE
+
+                                // to check if it's if the user was updated or it's just
+                                // the image that was uploaded !
+                                if (value.toString() != "ok") {
+
+                                    Snackbar.make(
+                                        binder.root,
+                                        value.toString(),
+                                        Snackbar.LENGTH_LONG
+                                    )
+                                        .show()
+
+                                    binder.resultAnim.apply {
+                                        setAnimation(R.raw.success)
+                                        playAnimation()
+                                    }
+
+                                } else {
+
+                                    findNavController().navigateUp()
+
+                                }
+                            }
+
+                        }
+
+                        is Failure -> {
+                            result.error.message?.let {
+
+                                Snackbar.make(
+                                    binder.root,
+                                    result.error.message.toString(),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
 
                                 binder.resultAnim.apply {
-                                    setAnimation(R.raw.success)
+                                    setAnimation(R.raw.failure)
                                     playAnimation()
                                 }
-
-                            }else {
-
-                                findNavController().navigateUp()
-
                             }
+
                         }
-
-                    } else if (it is Result.Failure) {
-                        if (it.error.message != null) {
-
-                            Snackbar.make(
-                                binder.root,
-                                it.error.message.toString(),
-                                Snackbar.LENGTH_LONG
-                            ).show()
-
-                            binder.resultAnim.apply {
-                                setAnimation(R.raw.failure)
-                                playAnimation()
-                            }
-                        }
-
                     }
                 }
         }
@@ -327,8 +338,6 @@ class MainPhotoFragment : Fragment() {
     }
 
     private fun showGallery() {
-        Log.d(TAG, "showGallery()")
-
         getContent.launch("image/*")
     }
 
@@ -382,15 +391,14 @@ class MainPhotoFragment : Fragment() {
                             user?.img = file.name
                             binder.image.setImageURI(Uri.parse(file.absolutePath))
 
-                            lifecycleScope.launch(Dispatchers.IO) {
-                                viewModel.uploadImage(file)
-                            }
+                            viewModel.uploadImage(file)
 
 
                         } catch (ex: Exception) {
                             // Error occurred while creating the File
-                                Toast.makeText(context, "Couldn't crop image.", Toast.LENGTH_LONG).show()
-                                Log.d(TAG, "onActivityResult: ${ex.message}")
+                            Toast.makeText(context, "Couldn't crop image.", Toast.LENGTH_LONG)
+                                .show()
+                            Log.d(TAG, "onActivityResult: ${ex.message}")
                         }
 
                     }
@@ -408,7 +416,7 @@ class MainPhotoFragment : Fragment() {
 
     val getContent = registerForActivityResult(GetContent()) { uri: Uri? ->
 
-        if(uri != null) {
+        if (uri != null) {
 
             performCrop(uri)
         }
@@ -419,15 +427,16 @@ class MainPhotoFragment : Fragment() {
         try {
 
             CropImage.activity(picUri)
-                .setAspectRatio(1,1)
+                .setAspectRatio(1, 1)
                 .setCropShape(CropImageView.CropShape.OVAL)
-                .setMinCropResultSize(100,100)
-                .setMaxCropResultSize(1000,1000)
+                .setMinCropResultSize(100, 100)
+                .setMaxCropResultSize(1000, 1000)
                 .start(requireContext(), this)
-        }
-        catch (anfe: Exception) {
+
+        } catch (anfe: Exception) {
             // display an error message
             val errorMessage = "Couldn't edit image."
+            Log.d(TAG, "performCrop: " + anfe.message)
             val toast: Toast = Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT)
             toast.show()
         }

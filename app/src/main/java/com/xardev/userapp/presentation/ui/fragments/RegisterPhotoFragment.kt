@@ -32,6 +32,7 @@ import com.xardev.userapp.R
 import com.xardev.userapp.domain.model.User
 import com.xardev.userapp.databinding.FragmentRegisterPhotoBinding
 import com.xardev.userapp.core.utils.Result
+import com.xardev.userapp.core.utils.isLoading
 import com.xardev.userapp.presentation.viewmodels.RegisterPhotoFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -155,25 +156,61 @@ class RegisterPhotoFragment : Fragment() {
     private fun setCollectors() {
 
         lifecycleScope.launchWhenStarted {
-            viewModel.isLoading
-                .collect {
-                    if (it) {
-                        binder.progressBar.show()
-                        binder.resultAnim.visibility = View.INVISIBLE
-                        binder.btnNext.isEnabled = false
-                        binder.btnBack.isEnabled = false
 
-                    } else {
-                        binder.progressBar.hide()
-                        binder.resultAnim.visibility = View.VISIBLE
-                        binder.btnNext.isEnabled = true
-                        binder.btnBack.isEnabled = true
+            viewModel.result
+                .collect { result ->
 
+                    when (result) {
+
+                        is Result.Loading -> {
+                            if (result.isLoading) {
+                                binder.progressBar.show()
+                                binder.resultAnim.visibility = View.INVISIBLE
+                                binder.btnNext.isEnabled = false
+                                binder.btnBack.isEnabled = false
+
+                            } else {
+                                binder.progressBar.hide()
+                                binder.resultAnim.visibility = View.VISIBLE
+                                binder.btnNext.isEnabled = true
+                                binder.btnBack.isEnabled = true
+                            }
+                        }
+
+                        is Result.Success -> {
+
+                            result.value?.let { it ->
+
+                                    Snackbar.make(binder.root, it.toString(), Snackbar.LENGTH_LONG)
+                                        .show()
+
+                                    binder.resultAnim.apply {
+                                        setAnimation(R.raw.success)
+                                        playAnimation()
+                                    }
+                            }
+
+                        }
+
+                        is Result.Failure -> {
+                            result.error.message?.let {
+
+                                Snackbar.make(
+                                    binder.root,
+                                    result.error.message.toString(),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+
+                                binder.resultAnim.apply {
+                                    setAnimation(R.raw.failure)
+                                    playAnimation()
+                                }
+                            }
+
+                        }
                     }
                 }
-        }
 
-        lifecycleScope.launchWhenStarted {
             viewModel.result
                 .collect { it ->
                     if (it is Result.Success) {

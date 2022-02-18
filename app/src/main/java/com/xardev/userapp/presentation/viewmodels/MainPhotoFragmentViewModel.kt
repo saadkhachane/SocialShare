@@ -22,9 +22,6 @@ class MainPhotoFragmentViewModel @Inject constructor(
     var updateUserUseCase: UpdateUserUseCase
 ) : ViewModel() {
 
-    private var _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    var isLoading = _isLoading.asStateFlow()
-
     private var _result: MutableSharedFlow<Result<*>> = MutableSharedFlow()
     var result = _result.asSharedFlow()
 
@@ -37,7 +34,7 @@ class MainPhotoFragmentViewModel @Inject constructor(
 
                     when(result) {
 
-                        is Loading -> { _isLoading.value = result.isLoading }
+                        is Loading -> { _result.emit(value = result) }
                         is Success -> { _result.emit(value = result) }
                         is Failure -> { _result.emit(value = result) }
 
@@ -58,7 +55,7 @@ class MainPhotoFragmentViewModel @Inject constructor(
 
                     when(result) {
 
-                        is Loading -> { _isLoading.value = result.isLoading }
+                        is Loading -> { _result.emit(value = result) }
                         is Success -> { _result.emit(value = result) }
                         is Failure -> { _result.emit(value = result) }
 

@@ -175,7 +175,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <Button
-                            android:id="@+id/edit_visibility"
+                            android:id="@+id/btn_edit_visibility"
                             style="@style/iconButton"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
@@ -198,7 +198,7 @@
                             android:layout_marginTop="4dp"
                             android:layout_marginEnd="16dp"
                             android:text="Choose what data you want be to be visible on your public profile."
-                            app:layout_constraintEnd_toStartOf="@+id/edit_visibility"
+                            app:layout_constraintEnd_toStartOf="@+id/btn_edit_visibility"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -222,6 +222,69 @@
 
                 <!-- Profile Visibility -->
 
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_edit_profile_shadow"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:cardBackgroundColor="@color/black"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="8dp"
+                    tools:alpha="0.5"
+                    android:alpha="0"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_edit_profile"
+                    app:layout_constraintEnd_toEndOf="@+id/btn_edit_profile"
+                    app:layout_constraintStart_toStartOf="@+id/btn_edit_profile"
+                    app:layout_constraintTop_toTopOf="@+id/btn_edit_profile" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_edit_profile"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="16dp"
+                    android:clickable="true"
+                    android:outlineProvider="none"
+                    app:cardBackgroundColor="@color/black"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="8dp"
+                    android:alpha="0"
+                    tools:alpha="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/card_profile_visibility">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_edit"
+                            android:tint="@color/white" />
+
+
+                        <TextView
+                            android:id="@+id/btn_edit_profile_text"
+                            style="@style/text_primary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:text="Edit profile"
+                            android:textColor="@color/white"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                </com.google.android.material.card.MaterialCardView>
+
                 <!-- About Card -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_about_shadow"
@@ -241,7 +304,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginTop="24dp"
                     android:layout_marginEnd="32dp"
                     android:alpha="0"
                     tools:alpha="1"
@@ -251,7 +314,7 @@
                     app:contentPadding="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_profile_visibility">
+                    app:layout_constraintTop_toBottomOf="@+id/btn_edit_profile">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -278,30 +341,61 @@
                         <Button
                             android:id="@+id/edit_bio"
                             style="@style/iconButton"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:backgroundTint="@color/white"
                             android:elevation="0dp"
-                            android:padding="3dp"
+                            android:padding="6dp"
+                            android:visibility="invisible"
                             app:cornerRadius="12dp"
                             app:icon="@drawable/ic_edit_small"
                             app:iconTint="@color/secondary"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:visibility="visible" />
 
                         <TextView
+                            android:id="@+id/txt_bio"
                             style="@style/text_secondary"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:layout_marginBottom="1dp"
                             android:text="@{user.bio}"
                             android:textColor="@color/primary"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView2"
                             tools:text="User Bio" />
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/input_layout_bio"
+                            style="@style/text_filed_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="about"
+                            android:visibility="gone"
+                            app:boxCornerRadiusBottomEnd="0dp"
+                            app:boxCornerRadiusBottomStart="0dp"
+                            app:errorEnabled="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/txt_bio">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_bio"
+                                style="@style/text_filed"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/proxima_bold"
+                                android:inputType="textMultiLine"
+                                android:lines="3"
+                                android:singleLine="true"
+                                android:text="@{user.bio}"
+                                android:textSize="16sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -330,7 +424,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/background"
-                        app:layout_flexGrow="1">
+                        app:layout_flexGrow="2">
 
                         <!-- Job Card -->
                         <com.google.android.material.card.MaterialCardView
@@ -392,30 +486,60 @@
                                 <Button
                                     android:id="@+id/edit_job"
                                     style="@style/iconButton"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
                                     android:backgroundTint="@color/white"
                                     android:elevation="0dp"
-                                    android:padding="3dp"
+                                    android:padding="6dp"
+                                    android:visibility="invisible"
                                     app:cornerRadius="12dp"
                                     app:icon="@drawable/ic_edit_small"
                                     app:iconTint="@color/secondary"
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    tools:visibility="visible" />
 
                                 <TextView
+                                    android:id="@+id/txt_job"
                                     style="@style/text_secondary"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="@{user.work}"
                                     android:textColor="@color/primary"
-                                    app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.0"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/textView4"
                                     tools:text="Android Developer" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/input_layout_job"
+                                    style="@style/text_filed_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="16dp"
+                                    android:hint="job"
+                                    android:visibility="gone"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:errorEnabled="false"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/txt_job">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/input_job"
+                                        style="@style/text_filed"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/proxima_bold"
+                                        android:inputType="textPersonName"
+                                        android:singleLine="true"
+                                        android:text="@{user.work}"
+                                        android:textSize="16sp" />
+                                </com.google.android.material.textfield.TextInputLayout>
 
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -429,7 +553,8 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:layout_flexGrow="1">
 
                         <!-- Phone Card -->
                         <com.google.android.material.card.MaterialCardView
@@ -490,30 +615,59 @@
                                 <Button
                                     android:id="@+id/edit_phone"
                                     style="@style/iconButton"
-                                    android:layout_width="24dp"
-                                    android:layout_height="24dp"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
                                     android:backgroundTint="@color/white"
                                     android:elevation="0dp"
-                                    android:padding="3dp"
+                                    android:padding="6dp"
+                                    android:visibility="invisible"
                                     app:cornerRadius="12dp"
                                     app:icon="@drawable/ic_edit_small"
                                     app:iconTint="@color/secondary"
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    tools:visibility="visible" />
 
                                 <TextView
+                                    android:id="@+id/txt_phone"
                                     style="@style/text_secondary"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:text="@{user.phone}"
                                     android:textColor="@color/primary"
-                                    app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintHorizontal_bias="0.0"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/textView1"
                                     tools:text="+1 526 152 652" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/input_layout_phone"
+                                    style="@style/text_filed_layout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="16dp"
+                                    android:hint="phone"
+                                    app:boxCornerRadiusBottomEnd="0dp"
+                                    app:boxCornerRadiusBottomStart="0dp"
+                                    app:errorEnabled="false"
+                                    android:visibility="gone"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/txt_phone">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/input_phone"
+                                        style="@style/text_filed"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/proxima_bold"
+                                        android:inputType="phone"
+                                        android:text="@{user.phone}"
+                                        android:textSize="16sp" />
+                                </com.google.android.material.textfield.TextInputLayout>
 
 
                             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -582,16 +736,18 @@
                         <Button
                             android:id="@+id/edit_location"
                             style="@style/iconButton"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:backgroundTint="@color/white"
                             android:elevation="0dp"
-                            android:padding="3dp"
+                            android:padding="6dp"
+                            android:visibility="invisible"
                             app:cornerRadius="12dp"
                             app:icon="@drawable/ic_edit_small"
                             app:iconTint="@color/secondary"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:visibility="visible" />
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
@@ -873,6 +1029,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     layout="@layout/loading_layout"
+                    android:visibility="gone"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

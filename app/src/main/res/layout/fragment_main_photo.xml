@@ -167,6 +167,7 @@
             android:layout_height="wrap_content"
             android:elevation="3dp"
             android:indeterminate="true"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/image"
             app:layout_constraintEnd_toEndOf="@+id/image"
             app:layout_constraintStart_toStartOf="@+id/image"

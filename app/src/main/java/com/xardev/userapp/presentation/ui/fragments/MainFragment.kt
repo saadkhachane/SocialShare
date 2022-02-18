@@ -3,12 +3,17 @@ package com.xardev.userapp.presentation.ui.fragments
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.transition.AutoTransition
+import android.transition.Fade
+import android.transition.TransitionManager
 import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
@@ -26,10 +31,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.xardev.userapp.R
 import com.xardev.userapp.core.utils.DataStoreManager
 import com.xardev.userapp.domain.model.User
-import com.xardev.userapp.databinding.FragmentRegisterMainBinding
 import com.xardev.userapp.core.utils.Result
 import com.xardev.userapp.core.utils.isLoading
-import com.xardev.userapp.databinding.ActivityMainBinding
 import com.xardev.userapp.databinding.FragmentMainBinding
 import com.xardev.userapp.domain.model.SocialProfile
 import com.xardev.userapp.presentation.adapters.SocialRecyclerAdapter
@@ -62,30 +65,95 @@ class MainFragment : Fragment() {
 
     lateinit var loadingAnimator : ObjectAnimator
 
+    private var editing = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         binder = DataBindingUtil.inflate(inflater,R.layout.fragment_main, container, false)
+        binder.lifecycleOwner = this
         adapter = context?.let { SocialRecyclerAdapter(it) }!!
 
         setupRecycler()
         setCollectors()
         setSwipeListener()
+        setTouchListeners()
         setClickListeners()
         setupLoading(binder.loading)
 
-        lifecycleScope.launchWhenStarted {
-            loadData()
-        }
+        loadData()
 
 
         return binder.root
     }
 
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setTouchListeners() {
+        binder.btnLinkedin.setOnTouchListener { v, e ->
+
+            if ( e.action == MotionEvent.ACTION_DOWN ) {
+                v.animate()
+                    .scaleX(0.97f)
+                    .scaleY(0.97f)
+                    .start()
+
+                binder.btnLinkedinShadow.animate()
+                    .scaleX(0.97f)
+                    .scaleY(0.97f)
+                    .start()
+
+            } else if( e.action == MotionEvent.ACTION_UP ){
+                v.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .start()
+
+                binder.btnLinkedinShadow.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .start()
+            }
+
+            v.performClick()
+            false
+        }
+
+        binder.btnEditProfile.setOnTouchListener { v, e ->
+
+                if ( e.action == MotionEvent.ACTION_DOWN ) {
+                    v.animate()
+                        .scaleX(0.97f)
+                        .scaleY(0.97f)
+                        .start()
+
+                    binder.btnEditProfileShadow.animate()
+                        .scaleX(0.97f)
+                        .scaleY(0.97f)
+                        .start()
+
+                } else if( e.action == MotionEvent.ACTION_UP ){
+                    v.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .start()
+
+                    binder.btnEditProfileShadow.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .start()
+                }
+
+
+            //v.performClick()
+            false
+        }
+    }
+
     private fun setClickListeners() {
-        binder.btnEditPhoto?.setOnClickListener {
+        binder.btnEditPhoto.setOnClickListener {
 
             val bundle = bundleOf(
                 "user" to user
@@ -99,10 +167,62 @@ class MainFragment : Fragment() {
                     bundle
                 )
             }
+        }
 
+        binder.btnEditVisibility.setOnClickListener {
+
+        }
+
+        binder.btnEditProfile.setOnClickListener {
+            editing = !editing
+
+            if(editing) {
+                binder.btnEditProfileText.text = "Save Profile"
+
+            }else {
+                binder.btnEditProfileText.text = "Edit Profile"
+                user?.let {
+                    user!!.bio = binder.inputBio.text.toString()
+                    user!!.work = binder.inputJob.text.toString()
+                    user!!.phone = binder.inputPhone.text.toString()
+                    viewModel.updateUser(user!!)
+                }
+            }
+
+            showHideViews()
+        }
+
+    }
+
+    private fun showHideViews() {
+        if(editing){
+            hideView(binder.txtBio)
+            showView(binder.inputLayoutBio)
+            hideView(binder.txtJob)
+            showView(binder.inputLayoutJob)
+            hideView(binder.txtPhone)
+            showView(binder.inputLayoutPhone)
+        }else {
+            showView(binder.txtBio)
+            hideView(binder.inputLayoutBio)
+            showView(binder.txtJob)
+            hideView(binder.inputLayoutJob)
+            showView(binder.txtPhone)
+            hideView(binder.inputLayoutPhone)
         }
     }
 
+    private fun hideView(view: View) {
+        TransitionManager.beginDelayedTransition(binder.root as ViewGroup?, AutoTransition())
+        view.visibility = View.GONE
+
+    }
+
+    private fun showView(view: View) {
+        TransitionManager.beginDelayedTransition(binder.root as ViewGroup?, AutoTransition())
+        view.visibility = View.VISIBLE
+
+    }
 
     private fun setSwipeListener() {
         binder.refreshLayout.setOnRefreshListener {
@@ -114,7 +234,7 @@ class MainFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             dsManager.getUserId()
                 .collect {
-                    if (it != null){
+                    it?.let{
                         launch(Dispatchers.IO) {
                             viewModel.getUser(it)
                         }
@@ -175,6 +295,9 @@ class MainFragment : Fragment() {
 
                             }
                             is Result.Success -> {
+                                if (result.value == "ok"){
+                                    loadData()
+                                }
                                 Log.d(TAG, "Success: ${result.value}")
                             }
                             is Result.Failure -> {
@@ -257,6 +380,9 @@ class MainFragment : Fragment() {
             delay(270)
             animateView(binder.cardProfileVisibility, 150f, 0f, 0f, 1f)
             delay(270)
+            animateView(binder.btnEditProfile, 150f, 0f, 0f, 1f)
+            animateView(binder.btnEditProfileShadow, 150f, 0f, 0f, 0.2f)
+            delay(270)
             animateView(binder.cardAbout, 150f, 0f, 0f, 1f)
             animateView(binder.cardAboutShadow, 150f, 0f, 0f, 0.2f)
             delay(270)
@@ -327,4 +453,5 @@ class MainFragment : Fragment() {
         }
 
     }
+
 }
