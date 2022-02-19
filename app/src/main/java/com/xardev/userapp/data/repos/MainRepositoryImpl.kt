@@ -16,6 +16,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.awaitResponse
+import java.io.IOException
 import javax.inject.Inject
 
 class MainRepositoryImpl @Inject constructor(
@@ -35,7 +36,7 @@ class MainRepositoryImpl @Inject constructor(
                     socialProfileList = userDao.getSocialProfiles().map { it.toSocialProfile() }
                 }
 
-            kotlin.runCatching {
+            try {
 
                 val userDto = api.getUser(Constants.API_KEY, id)
 
@@ -48,13 +49,20 @@ class MainRepositoryImpl @Inject constructor(
                         socialProfileList = userDao.getSocialProfiles().map { it.toSocialProfile() }
                     }
 
-            }.onFailure {
-                emit( Success(user) )
-                emit( Failure<Throwable>(it) )
-                emit( Loading<Boolean>(false) )
-            }.onSuccess {
+
                 emit( Success(user) )
                 emit( Loading<Boolean>(false) )
+
+            }
+            catch (e: IOException) {
+                emit( Loading<Boolean>(false) )
+                emit( Success(user) )
+                emit(Failure<Throwable>(Throwable("Please check you internet connection and try again.")))
+            }
+            catch (e: Exception){
+                emit( Loading<Boolean>(false) )
+                emit( Success(user) )
+                emit(Failure<Throwable>(e))
             }
 
         }
@@ -65,7 +73,7 @@ class MainRepositoryImpl @Inject constructor(
 
         return flow {
 
-            kotlin.runCatching {
+            try{
 
                 emit(Loading<Boolean>(true))
 
@@ -106,9 +114,14 @@ class MainRepositoryImpl @Inject constructor(
                 }
 
 
-            }.onFailure {
+            }
+            catch (e: IOException) {
                 emit(Loading<Boolean>(false))
-                emit(Failure<Throwable>(it))
+                emit(Failure<Throwable>(Throwable("Please check you internet connection and try again.")))
+            }
+            catch (e: Exception){
+                emit(Loading<Boolean>(false))
+                emit(Failure<Throwable>(e))
             }
 
         }

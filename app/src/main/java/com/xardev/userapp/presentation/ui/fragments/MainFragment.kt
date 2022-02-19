@@ -7,16 +7,14 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.transition.AutoTransition
-import android.transition.Fade
 import android.transition.TransitionManager
-import android.util.Log
-import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.*
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
@@ -27,7 +25,6 @@ import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import com.google.android.material.snackbar.Snackbar
 import com.xardev.userapp.R
 import com.xardev.userapp.core.utils.DataStoreManager
 import com.xardev.userapp.domain.model.User
@@ -39,7 +36,6 @@ import com.xardev.userapp.presentation.adapters.SocialRecyclerAdapter
 import com.xardev.userapp.presentation.ui.activities.LoginActivity
 import com.xardev.userapp.presentation.ui.activities.RegisterActivity
 import com.xardev.userapp.presentation.viewmodels.MainViewModel
-import com.xardev.userapp.presentation.viewmodels.RegisterMainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -66,6 +62,7 @@ class MainFragment : Fragment() {
     lateinit var loadingAnimator : ObjectAnimator
 
     private var editing = false
+    private var justCreated = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,6 +82,7 @@ class MainFragment : Fragment() {
 
         loadData()
 
+        justCreated = true
 
         return binder.root
     }
@@ -288,7 +286,11 @@ class MainFragment : Fragment() {
                                     }else {
                                         loadingAnimator.cancel()
                                         binder.loading.visibility = View.GONE
+
+                                        if(justCreated)
                                         animateViews(binder)
+                                        justCreated = false
+
                                     }
 
                                 }
@@ -298,10 +300,9 @@ class MainFragment : Fragment() {
                                 if (result.value == "ok"){
                                     loadData()
                                 }
-                                Log.d(TAG, "Success: ${result.value}")
                             }
                             is Result.Failure -> {
-                                Log.d(TAG, "Failure: ${result.error.message}")
+                                Toast.makeText(requireContext(), result.error.message, Toast.LENGTH_LONG).show()
                             }
 
                         }
@@ -425,14 +426,17 @@ class MainFragment : Fragment() {
         ValueAnimator.ofPropertyValuesHolder(
             alpha
         )
-        loadingAnimator = ObjectAnimator.ofPropertyValuesHolder(
-            view,
-            alpha
-        ).apply {
-            duration = 500
-            repeatCount = ObjectAnimator.INFINITE
-            repeatMode = ObjectAnimator.REVERSE
+        lifecycleScope.launch(Dispatchers.IO) {
+            loadingAnimator = ObjectAnimator.ofPropertyValuesHolder(
+                view,
+                alpha
+            ).apply {
+                duration = 500
+                repeatCount = ObjectAnimator.INFINITE
+                repeatMode = ObjectAnimator.REVERSE
+            }
         }
+
 
     }
 

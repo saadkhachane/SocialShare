@@ -8,9 +8,7 @@ import com.xardev.userapp.core.utils.isLoading
 import com.xardev.userapp.domain.use_case.GetUserUseCase
 import com.xardev.userapp.domain.use_case.UpdateUserUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,11 +20,11 @@ class MainViewModel @Inject constructor(
     val updateUserUseCase: UpdateUserUseCase
 ) : ViewModel() {
 
-    private var _result: MutableStateFlow<Result<*>> = MutableStateFlow(Result.Success(null))
-    var result: StateFlow<Result<*>> = _result
+    private var _result: MutableSharedFlow<Result<*>> = MutableSharedFlow()
+    var result: SharedFlow<Result<*>> = _result
 
-    private var _user: MutableStateFlow<User?> = MutableStateFlow(null)
-    var user: StateFlow<User?> = _user
+    private var _user: MutableSharedFlow<User?> = MutableSharedFlow()
+    var user: SharedFlow<User?> = _user
 
     fun getUser(id: String) {
 
@@ -37,11 +35,12 @@ class MainViewModel @Inject constructor(
 
                     when(result) {
 
-                        is Result.Loading -> { _result.value = result}
+                        is Result.Loading -> { _result.emit(result)}
                         is Result.Success -> {
-                            _user.value = result.value as User
+                            _user.emit(result.value as User)
+                            _result.emit(result)
                         }
-                        is Result.Failure -> { _result.value = result }
+                        is Result.Failure -> { _result.emit(result) }
 
                     }
 
@@ -60,11 +59,11 @@ class MainViewModel @Inject constructor(
 
                     when(result) {
 
-                        is Result.Loading -> { _result.value = result}
+                        is Result.Loading -> { _result.emit(result)}
                         is Result.Success -> {
-                            _result.value = result
+                            _result.emit(result)
                         }
-                        is Result.Failure -> { _result.value = result }
+                        is Result.Failure -> { _result.emit(result) }
 
                     }
 
